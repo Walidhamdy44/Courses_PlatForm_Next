@@ -4,6 +4,8 @@
 
 @layer base {
   :root {
+    --greenBg: rgba(46, 229, 110, 0.256);
+    --green: rgb(9, 152, 21);
     --background: 0 0% 100%;
     --foreground: 240 10% 3.9%;
     --card: 0 0% 100%;
@@ -56,4 +58,21 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+.greenBg {
+  background-color: rgba(46, 229, 110, 0.256);
+}
+.active {
+  background-color: rgba(46, 229, 110, 0.256);
+}
+
+.active::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  width: 5px;
+  height: 100%;
+  border-radius: 10px;
+  right: -10px;
+  background-color: var(--green);
 }
