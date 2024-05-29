@@ -1,5 +1,5 @@
 const ExplorePage = () => {
-  return <div>ec</div>;
+  return <div></div>;
 };
 
 export default ExplorePage;

@@ -75,4 +75,9 @@
   border-radius: 10px;
   right: -10px;
   background-color: var(--green);
+  box-shadow: rgb(108 247 157) -7px 1px 18px 6px;
+}
+.cl-internal-1j7ahlv {
+  width: 50px !important;
+  height: 50px !important;
 }
