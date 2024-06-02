@@ -2,8 +2,9 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
 import { Course } from "@prisma/client";
+
+import { useForm } from "react-hook-form";
 import axios from "axios";
 import { Button } from "@/components/ui/button";
 import {
@@ -15,36 +16,40 @@ import {
 } from "@/components/ui/form";
 import toast from "react-hot-toast";
 import { Badge } from "@/components/ui/badge";
-import { Edit, X } from "lucide-react";
+import { Edit, ImageIcon, Upload, X } from "lucide-react";
 import { useState } from "react";
 import { Textarea } from "@/components/ui/textarea";
+import Image from "next/image";
+import FileUpload from "@/components/FileUpload";
+import { urlToHttpOptions } from "url";
 
-interface descForm {
+interface ImageForm {
   initialData: Course;
+
   courseId: string;
 }
 
 const formSchema = z.object({
-  description: z.string().min(10, {
-    message: "Course Descriotion must be at least 10 characters.",
+  imgUrl: z.string().min(1, {
+    message: "Course Cover Image Is Required.",
   }),
 });
 
-const DescForm = ({ courseId, initialData }: descForm) => {
+const ImageForm = ({ courseId, initialData }: ImageForm) => {
   const router = useRouter();
 
   const [allowed, setAllowed] = useState(false);
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: { description: initialData.description || "" },
+    defaultValues: { imgUrl: initialData?.imgUrl || "" },
   });
   const { isSubmitting, isValid } = form.formState;
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       await axios.patch(`/api/courses/${courseId}`, values);
-      toast.success("Course Descriotion Updated Successfully!");
+      toast.success("Cover Image Updated Successfully!");
       router.refresh();
       setAllowed(false);
     } catch (error) {
@@ -55,7 +60,7 @@ const DescForm = ({ courseId, initialData }: descForm) => {
   return (
     <div className="bg-slate-100 p-[15px]  rounded-md shadow-sm mt-6 select-none">
       <div className="flex items-center gap-3 bg-slate-100 justify-between">
-        <span className="text-[19px]">Course description</span>
+        <span className="text-[19px]">Course Cover</span>
         {allowed ? (
           <Badge
             className="cursor-pointer"
@@ -72,51 +77,48 @@ const DescForm = ({ courseId, initialData }: descForm) => {
               setAllowed(!allowed);
             }}
           >
-            <Edit />
+            <Upload />
           </Badge>
         )}
       </div>
       {!allowed ? (
-        <p className="pt-[20px] text-[16px] text-gray-700">
-          {initialData.description ? (
-            initialData.description
-          ) : (
-            <p className="text-gray-400"> No description yet </p>
+        <div className="pt-[20px] text-[16px] text-gray-700">
+          {initialData.imgUrl && (
+            <div className="flex items-center justify-center bg-slate-200 p-3 mt-3 aspect-video">
+              <Image
+                src={initialData.imgUrl}
+                alt={initialData?.description || "Course description"}
+                fill
+                className="object-cover rounded-md"
+              />
+            </div>
           )}
-        </p>
+
+          <div
+            className="flex items-center  cursor-pointer justify-center bg-slate-200 p-3 h-60"
+            onClick={() => {
+              setAllowed(true);
+            }}
+          >
+            <ImageIcon width={50} height={50} />
+          </div>
+        </div>
       ) : null}
       {allowed ? (
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-8 mt-8"
-          >
-            <FormField
-              control={form.control}
-              name="description"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <Textarea
-                      placeholder=" e.g 'This Cours is about ...'"
-                      {...field}
-                      disabled={isSubmitting}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <div className="flex items-center ">
-              <Button type="submit" disabled={!isValid || isSubmitting}>
-                Update ⚡
-              </Button>
-            </div>
-          </form>
-        </Form>
+        <div className="flex items-center justify-center flex-col p-4">
+          <FileUpload
+            endPoint="courseImage"
+            onChange={(url) => {
+              if (url) onSubmit({ imgUrl: url });
+            }}
+          />
+          <div className="text-sm  text-muted-foreground mt-[20px]">
+            16:9 asbict ratio (Recommended)
+          </div>
+        </div>
       ) : null}
     </div>
   );
 };
 
-export default DescForm;
+export default ImageForm;

@@ -59,6 +59,7 @@
     @apply bg-background text-foreground;
   }
 }
+
 .greenBg {
   background-color: rgba(46, 229, 110, 0.256);
 }
