@@ -1,6 +1,8 @@
+import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { db } from "@/lib/db";
 import { auth } from "@clerk/nextjs/server";
+import { LayoutDashboard } from "lucide-react";
 import { redirect } from "next/navigation";
 
 const CoursePageDetails = async ({ params }: { params: { id: string } }) => {
@@ -36,8 +38,20 @@ const CoursePageDetails = async ({ params }: { params: { id: string } }) => {
           Complate All Fields :{" "}
           <span className="font-extrabold text-green-600">{progressText}%</span>
         </p>
-        <div className="w-[70%]">
+        <div className="lg:w-[70%] md:w-full sm:w-full">
           <Progress value={progressText} />
+        </div>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-[40px]">
+        <div>
+          <div>
+            <h2 className="flex items-center gap-4 text-[20px] font-bold">
+              <Badge>
+                <LayoutDashboard />
+              </Badge>
+              Custmize Your Course
+            </h2>
+          </div>
         </div>
       </div>
     </div>
