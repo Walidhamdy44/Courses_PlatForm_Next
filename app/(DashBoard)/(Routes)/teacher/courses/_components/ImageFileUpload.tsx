@@ -1,27 +1,16 @@
 "use client";
-import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useRouter } from "next/navigation";
 import { Course } from "@prisma/client";
-
-import { useForm } from "react-hook-form";
-import axios from "axios";
-import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormMessage,
-} from "@/components/ui/form";
-import toast from "react-hot-toast";
-import { Badge } from "@/components/ui/badge";
-import { Edit, ImageIcon, Upload, X } from "lucide-react";
 import { useState } from "react";
-import { Textarea } from "@/components/ui/textarea";
 import Image from "next/image";
+import axios from "axios";
+
+import toast from "react-hot-toast";
+import { ImageIcon, Upload, X } from "lucide-react";
+
+import { Badge } from "@/components/ui/badge";
 import FileUpload from "@/components/FileUpload";
-import { urlToHttpOptions } from "url";
 
 interface ImageForm {
   initialData: Course;
@@ -39,12 +28,6 @@ const ImageForm = ({ courseId, initialData }: ImageForm) => {
   const router = useRouter();
 
   const [allowed, setAllowed] = useState(false);
-  // 1. Define your form.
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: { imgUrl: initialData?.imgUrl || "" },
-  });
-  const { isSubmitting, isValid } = form.formState;
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
@@ -82,9 +65,9 @@ const ImageForm = ({ courseId, initialData }: ImageForm) => {
         )}
       </div>
       {!allowed ? (
-        <div className="pt-[20px] text-[16px] text-gray-700">
-          {initialData.imgUrl && (
-            <div className="flex items-center justify-center bg-slate-200 p-3 mt-3 aspect-video">
+        <div className="pt-[5px] text-[16px] text-gray-700">
+          {initialData.imgUrl ? (
+            <div className="flex items-center justify-center bg-slate-200 p-3 mt-3 aspect-video relative">
               <Image
                 src={initialData.imgUrl}
                 alt={initialData?.description || "Course description"}
@@ -92,16 +75,16 @@ const ImageForm = ({ courseId, initialData }: ImageForm) => {
                 className="object-cover rounded-md"
               />
             </div>
+          ) : (
+            <div
+              className="flex items-center  cursor-pointer justify-center bg-slate-200 p-3 h-60"
+              onClick={() => {
+                setAllowed(true);
+              }}
+            >
+              <ImageIcon width={50} height={50} />
+            </div>
           )}
-
-          <div
-            className="flex items-center  cursor-pointer justify-center bg-slate-200 p-3 h-60"
-            onClick={() => {
-              setAllowed(true);
-            }}
-          >
-            <ImageIcon width={50} height={50} />
-          </div>
         </div>
       ) : null}
       {allowed ? (
