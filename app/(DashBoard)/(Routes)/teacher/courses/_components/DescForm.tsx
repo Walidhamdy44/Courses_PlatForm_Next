@@ -77,13 +77,13 @@ const DescForm = ({ courseId, initialData }: descForm) => {
         )}
       </div>
       {!allowed ? (
-        <p className="pt-[20px] text-[16px] text-gray-700">
+        <div className="pt-[20px] text-[16px] text-gray-700">
           {initialData.description ? (
             initialData.description
           ) : (
             <p className="text-gray-400"> No description yet </p>
           )}
-        </p>
+        </div>
       ) : null}
       {allowed ? (
         <Form {...form}>
