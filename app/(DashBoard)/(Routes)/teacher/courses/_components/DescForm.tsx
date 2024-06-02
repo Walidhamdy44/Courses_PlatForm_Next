@@ -2,39 +2,36 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useRouter } from "next/navigation";
-import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import Link from "next/link";
 import toast from "react-hot-toast";
 import { Badge } from "@/components/ui/badge";
 import { Edit, X } from "lucide-react";
 import { useState } from "react";
+import { Textarea } from "@/components/ui/textarea";
 
-interface FormTitle {
+interface descForm {
   initialData: {
-    title: string;
+    description: string;
   };
   courseId: string;
 }
 
 const formSchema = z.object({
-  title: z.string().min(5, {
-    message: "Course Name must be at least 5 characters.",
+  description: z.string().min(10, {
+    message: "Course Descriotion must be at least 10 characters.",
   }),
 });
 
-const TitleForm = ({ courseId, initialData }: FormTitle) => {
+const DescForm = ({ courseId, initialData }: descForm) => {
   const router = useRouter();
 
   const [allowed, setAllowed] = useState(false);
@@ -47,8 +44,8 @@ const TitleForm = ({ courseId, initialData }: FormTitle) => {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      const response = await axios.patch(`/api/courses/${courseId}`, values);
-      toast.success("Course Updated Successfully!");
+      await axios.patch(`/api/courses/${courseId}`, values);
+      toast.success("Course Descriotion Updated Successfully!");
       router.refresh();
       setAllowed(false);
     } catch (error) {
@@ -59,7 +56,7 @@ const TitleForm = ({ courseId, initialData }: FormTitle) => {
   return (
     <div className="bg-slate-100 p-[15px]  rounded-md shadow-sm mt-6 select-none">
       <div className="flex items-center gap-3 bg-slate-100 justify-between">
-        <span className="text-[19px]">Course Title</span>
+        <span className="text-[19px]">Course description</span>
         {allowed ? (
           <Badge
             className="cursor-pointer"
@@ -81,8 +78,12 @@ const TitleForm = ({ courseId, initialData }: FormTitle) => {
         )}
       </div>
       {!allowed ? (
-        <p className="pt-[20px] text-[20px] font-bold text-green-900">
-          {initialData.title}
+        <p className="pt-[20px] text-[16px] text-gray-700">
+          {initialData.description ? (
+            initialData.description
+          ) : (
+            <p className="text-gray-400"> No description yet </p>
+          )}
         </p>
       ) : null}
       {allowed ? (
@@ -93,12 +94,12 @@ const TitleForm = ({ courseId, initialData }: FormTitle) => {
           >
             <FormField
               control={form.control}
-              name="title"
+              name="description"
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <Input
-                      placeholder=" e.g 'Advanced Web Development'"
+                    <Textarea
+                      placeholder=" e.g 'This Cours is about ...'"
                       {...field}
                       disabled={isSubmitting}
                     />
@@ -107,16 +108,7 @@ const TitleForm = ({ courseId, initialData }: FormTitle) => {
                 </FormItem>
               )}
             />
-            <div className="flex items-center gap-4">
-              <Button
-                type="button"
-                variant="destructive"
-                onClick={() => {
-                  setAllowed(!allowed);
-                }}
-              >
-                Cancle
-              </Button>
+            <div className="flex items-center ">
               <Button type="submit" disabled={!isValid || isSubmitting}>
                 Update ⚡
               </Button>
@@ -128,4 +120,4 @@ const TitleForm = ({ courseId, initialData }: FormTitle) => {
   );
 };
 
-export default TitleForm;
+export default DescForm;

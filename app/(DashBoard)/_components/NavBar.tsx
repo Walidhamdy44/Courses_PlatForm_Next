@@ -5,7 +5,7 @@ import NavMood from "./Nav-Mood";
 
 const NavBar = () => {
   return (
-    <div className="flex items-center justify-between py-[10px] px-[30px] w-full shadow-lg ">
+    <div className="flex items-center justify-between py-[10px] px-[30px] w-full shadow-lg z-20 ">
       <div className="block lg:hidden">
         <MenuMobile />
       </div>

@@ -5,6 +5,7 @@ import { auth } from "@clerk/nextjs/server";
 import { LayoutDashboard } from "lucide-react";
 import { redirect } from "next/navigation";
 import TitleForm from "../_components/TitleForm";
+import DescForm from "../_components/DescForm";
 
 const CoursePageDetails = async ({ params }: { params: { id: string } }) => {
   const CourseId = params.id;
@@ -55,6 +56,9 @@ const CoursePageDetails = async ({ params }: { params: { id: string } }) => {
           </div>
           <div>
             <TitleForm initialData={Course} courseId={CourseId} />
+          </div>
+          <div>
+            <DescForm initialData={Course} courseId={CourseId} />
           </div>
         </div>
       </div>
