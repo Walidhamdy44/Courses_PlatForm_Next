@@ -10,6 +10,9 @@ export const metadata: Metadata = {
   title: "Courses Platform",
   description:
     "Explore a wide range of educational courses designed to enhance your skills and knowledge.",
+  icons: {
+    icon: "/imgs/logo1.svg",
+  },
 };
 
 export default function RootLayout({
