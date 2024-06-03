@@ -15,7 +15,7 @@ const SideLinks = () => {
   return (
     <>
       {isTeacher ? (
-        <ul className="flex flex-col  w-full px-3 gap-[15px] text-center mt-[20px]">
+        <ul className="flex flex-col  w-full px-3 gap-[15px] text-center mt-[10px]">
           <li
             className={cn(
               "relative w-full py-[10px] px-[10px] text-[20px] rounded-md cursor-pointer hover:bg-[rgba(46,229,110,0.256)] transition-all",
