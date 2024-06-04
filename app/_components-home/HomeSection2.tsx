@@ -11,7 +11,12 @@ import {
 
 const HomeSection2 = () => {
   return (
-    <div>
+    <div
+      style={{
+        background:
+          "linear-gradient(to bottom,rgba(99, 230, 12, 0),rgba(99, 230, 12, 0.403), rgba(99, 230, 12, 0.286), rgba(99, 230, 12, 0.012)",
+      }}
+    >
       <section>
         <div className="max-w-screen-xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8 lg:py-16">
           <div className="grid grid-cols-1 gap-y-8 lg:grid-cols-2 lg:items-center lg:gap-x-16">
