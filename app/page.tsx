@@ -1,4 +1,5 @@
-import HomePage from "./_components-home/HomePage";
+import HomeSection2 from "./_components-home/HomeSection2";
+import LandingPage from "./_components-home/LandingPage";
 import NavBarHome from "./_components-home/NavBarHome";
 
 const Home = () => {
@@ -7,8 +8,11 @@ const Home = () => {
       <div>
         <NavBarHome />
       </div>
-      <div className="w-full min-h-[100vh]">
-        <HomePage />
+      <div className="w-full">
+        <LandingPage />
+      </div>
+      <div>
+        <HomeSection2 />
       </div>
     </div>
   );
