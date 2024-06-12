@@ -2,20 +2,34 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { db } from "@/lib/db";
 import { auth } from "@clerk/nextjs/server";
-import { BadgeDollarSign, LayoutDashboard, ListTodo } from "lucide-react";
+import {
+  BadgeDollarSign,
+  LayoutDashboard,
+  ListTodo,
+  Sliders,
+} from "lucide-react";
 import { redirect } from "next/navigation";
 import TitleForm from "../_components/TitleForm";
 import DescForm from "../_components/DescForm";
 import ImageForm from "../_components/ImageFileUpload";
 import CategoryForm from "../_components/CategoryForm";
 import PriceForm from "../_components/PriceForm";
+import AttachmentForm from "../_components/AttachmentForm";
 
 const CoursePageDetails = async ({ params }: { params: { id: string } }) => {
   const CourseId = params.id;
+
   // fitch  course from db
   const Course = await db.course.findUnique({
     where: {
       id: CourseId,
+    },
+    include: {
+      attachment: {
+        orderBy: {
+          created_at: "desc",
+        },
+      },
     },
   });
   // fitch all Categorys from db
@@ -31,7 +45,6 @@ const CoursePageDetails = async ({ params }: { params: { id: string } }) => {
   if (!Course) {
     return redirect("/dashboard");
   }
-
   const requiredFields = [
     Course.title,
     Course.imgUrl,
@@ -104,6 +117,15 @@ const CoursePageDetails = async ({ params }: { params: { id: string } }) => {
               Sell Your Course
             </h2>
             <PriceForm initialData={Course} courseId={CourseId} />
+          </div>
+          <div>
+            <h2 className="flex items-center gap-4 text-[20px] font-bold mt-7">
+              <Badge>
+                <Sliders />
+              </Badge>
+              Resources & Attachments
+            </h2>
+            <AttachmentForm initialData={Course} courseId={CourseId} />
           </div>
         </div>
       </div>
