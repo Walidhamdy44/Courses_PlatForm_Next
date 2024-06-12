@@ -1,5 +1,5 @@
 import SideLinks from "./SideLinks";
-import Logo from "@/app/_components-home/Logo";
+import Logo from "@/app/(Home Page)/_components-home/Logo";
 
 const Sidebar = () => {
   return (
