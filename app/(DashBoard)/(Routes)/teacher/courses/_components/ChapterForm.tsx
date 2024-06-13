@@ -3,7 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
-import { Course } from "@prisma/client";
+import { Chapter, Course } from "@prisma/client";
 import axios from "axios";
 import { Button } from "@/components/ui/button";
 import {
@@ -17,15 +17,15 @@ import toast from "react-hot-toast";
 import { Badge } from "@/components/ui/badge";
 import { Edit, X } from "lucide-react";
 import { useState } from "react";
-import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
 
 interface ChapterForm {
-  initialData: Course;
+  initialData: Course & { chapter: Chapter[] };
   courseId: string;
 }
 
 const formSchema = z.object({
-  title: z.string().min(1),
+  chapterTitle: z.string().min(1),
 });
 
 const ChapterForm = ({ courseId, initialData }: ChapterForm) => {
@@ -35,14 +35,14 @@ const ChapterForm = ({ courseId, initialData }: ChapterForm) => {
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: { description: initialData.description || "" },
+    defaultValues: { chapterTitle: "" },
   });
   const { isSubmitting, isValid } = form.formState;
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      await axios.patch(`/api/courses/${courseId}`, values);
-      toast.success("Course Descriotion Updated Successfully!");
+      await axios.post(`/api/courses/${courseId}/chapter`, values);
+      toast.success("Course Created Successfully!");
       router.refresh();
       setAllowed(false);
     } catch (error) {
@@ -53,7 +53,7 @@ const ChapterForm = ({ courseId, initialData }: ChapterForm) => {
   return (
     <div className="bg-slate-100 p-[15px]  rounded-md shadow-sm mt-6 select-none">
       <div className="flex items-center gap-3 bg-slate-100 justify-between">
-        <span className="text-[19px]">Course description</span>
+        <span className="text-[19px]">Course Chapters</span>
         {allowed ? (
           <Badge
             className="cursor-pointer"
@@ -76,10 +76,10 @@ const ChapterForm = ({ courseId, initialData }: ChapterForm) => {
       </div>
       {!allowed ? (
         <div className="pt-[20px] text-[16px] text-gray-700">
-          {initialData.description ? (
-            initialData.description
+          {initialData.chapter.length > 0 ? (
+            <div className="flex items-start gap-3 flex-col"></div>
           ) : (
-            <p className="text-gray-400"> No description yet </p>
+            <p className="text-gray-400"> No Chapters yet </p>
           )}
         </div>
       ) : null}
@@ -91,12 +91,12 @@ const ChapterForm = ({ courseId, initialData }: ChapterForm) => {
           >
             <FormField
               control={form.control}
-              name="description"
+              name="chapterTitle"
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <Textarea
-                      placeholder=" e.g 'This Cours is about ...'"
+                    <Input
+                      placeholder=" e.g 'Introduction to the course'"
                       {...field}
                       disabled={isSubmitting}
                     />
@@ -107,7 +107,7 @@ const ChapterForm = ({ courseId, initialData }: ChapterForm) => {
             />
             <div className="flex items-center ">
               <Button type="submit" disabled={!isValid || isSubmitting}>
-                Update ⚡
+                Create 🖋️
               </Button>
             </div>
           </form>
