@@ -15,16 +15,24 @@ import ImageForm from "../_components/ImageFileUpload";
 import CategoryForm from "../_components/CategoryForm";
 import PriceForm from "../_components/PriceForm";
 import AttachmentForm from "../_components/AttachmentForm";
+import ChapterForm from "../_components/ChapterForm";
 
 const CoursePageDetails = async ({ params }: { params: { id: string } }) => {
   const CourseId = params.id;
+  const { userId } = auth();
 
   // fitch  course from db
   const Course = await db.course.findUnique({
     where: {
       id: CourseId,
+      userId,
     },
     include: {
+      chapter: {
+        orderBy: {
+          position: "asc",
+        },
+      },
       attachment: {
         orderBy: {
           created_at: "desc",
@@ -38,7 +46,6 @@ const CoursePageDetails = async ({ params }: { params: { id: string } }) => {
       name: "asc",
     },
   });
-  const { userId } = auth();
   if (!userId) {
     return redirect("/");
   }
@@ -51,6 +58,7 @@ const CoursePageDetails = async ({ params }: { params: { id: string } }) => {
     Course.price,
     Course.description,
     Course.categoryId,
+    Course.chapter.some((cha) => cha.isPublished),
   ];
   const totalFields = requiredFields.length;
   const missingFields = requiredFields.filter(Boolean).length;
@@ -61,7 +69,9 @@ const CoursePageDetails = async ({ params }: { params: { id: string } }) => {
         <h2 className="text-[23px] font-extrabold">Course Setup </h2>
         <p className="text-[16px] text-gray-700 py-[20px]">
           Complate All Fields :{" "}
-          <span className="font-extrabold text-green-600">{progressText}%</span>
+          <span className="font-extrabold text-green-600">
+            {Math.round(progressText)}%
+          </span>
         </p>
         <div className="lg:w-[70%] md:w-full sm:w-full pb-[20px]">
           <Progress value={progressText} />
@@ -107,7 +117,7 @@ const CoursePageDetails = async ({ params }: { params: { id: string } }) => {
             </h2>
           </div>
           <div>
-            <TitleForm initialData={Course} courseId={CourseId} />
+            <ChapterForm initialData={Course} courseId={CourseId} />
           </div>
           <div>
             <h2 className="flex items-center gap-4 text-[20px] font-bold mt-7">

@@ -53,7 +53,7 @@ model Chapter {
   description String 
   videoUrl String?
   position Int
-    isPublished Boolean @default(false)
+  isPublished Boolean @default(false)
   ifFree Boolean @default(false)
   courseId String
   course Course @relation(fields: [courseId], references: [id] , onDelete: Cascade)
