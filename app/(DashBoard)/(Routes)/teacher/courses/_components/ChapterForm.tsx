@@ -18,6 +18,7 @@ import { Badge } from "@/components/ui/badge";
 import { Edit, X } from "lucide-react";
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
+import ChapterList from "./ChapterList";
 
 interface ChapterForm {
   initialData: Course & { chapter: Chapter[] };
@@ -25,7 +26,7 @@ interface ChapterForm {
 }
 
 const formSchema = z.object({
-  chapterTitle: z.string().min(1),
+  chapterTitle: z.string().min(5),
 });
 
 const ChapterForm = ({ courseId, initialData }: ChapterForm) => {
@@ -77,7 +78,12 @@ const ChapterForm = ({ courseId, initialData }: ChapterForm) => {
       {!allowed ? (
         <div className="pt-[20px] text-[16px] text-gray-700">
           {initialData.chapter.length > 0 ? (
-            <div className="flex items-start gap-3 flex-col"></div>
+            <div className="">
+              <ChapterList
+                items={initialData.chapter || []}
+                courseId={courseId}
+              />
+            </div>
           ) : (
             <p className="text-gray-400"> No Chapters yet </p>
           )}
