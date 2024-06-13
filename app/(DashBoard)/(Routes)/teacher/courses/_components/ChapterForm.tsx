@@ -25,9 +25,7 @@ interface ChapterForm {
 }
 
 const formSchema = z.object({
-  description: z.string().min(10, {
-    message: "Course Descriotion must be at least 10 characters.",
-  }),
+  title: z.string().min(1),
 });
 
 const ChapterForm = ({ courseId, initialData }: ChapterForm) => {
