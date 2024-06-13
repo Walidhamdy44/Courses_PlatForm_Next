@@ -41,14 +41,3 @@ export const POST = async (
     });
   }
 };
-
-export const DELETE = async (id: String) => {
-  try {
-    const attachment = await db.attachment;
-  } catch (err) {
-    console.log("course Attachmnt error" + err);
-    return new NextResponse("Internal Error", {
-      status: 500,
-    });
-  }
-};
