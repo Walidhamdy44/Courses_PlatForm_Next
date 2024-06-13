@@ -39,11 +39,13 @@ const AttachmentForm = ({ courseId, initialData }: AttachmentForm) => {
 
   const onDelete = async (id: string) => {
     try {
+      setDeletdId(id);
       await axios.delete(`/api/courses/${courseId}/attachment/${id}`);
       toast.success("Attachment Deleted Successfully!");
       router.refresh();
     } catch (error) {
       toast.error("Something went wrong!");
+    } finally {
       setDeletdId(null);
     }
   };
@@ -92,7 +94,12 @@ const AttachmentForm = ({ courseId, initialData }: AttachmentForm) => {
                     {deletedId === attachment.id ? (
                       <Loader2 className="w-4 h-4 animate-spin" />
                     ) : (
-                      <Badge className="cursor-pointer">
+                      <Badge
+                        className="cursor-pointer"
+                        onClick={() => {
+                          onDelete(attachment.id);
+                        }}
+                      >
                         <Delete className="cursor-pointer w-4 h-4" />
                       </Badge>
                     )}
