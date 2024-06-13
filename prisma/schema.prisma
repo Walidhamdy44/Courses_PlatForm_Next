@@ -49,8 +49,8 @@ model Attachment {
 
 model Chapter {
   id String  @id @default(cuid()) @map("_id")
-  title String 
-  description String 
+  chapterTitle String 
+  description String? 
   videoUrl String?
   position Int
   isPublished Boolean @default(false)
