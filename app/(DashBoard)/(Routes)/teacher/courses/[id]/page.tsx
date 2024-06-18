@@ -58,7 +58,8 @@ const CoursePageDetails = async ({ params }: { params: { id: string } }) => {
     Course.price,
     Course.description,
     Course.categoryId,
-    Course.chapter.some((cha) => cha.isPublished),
+    Course.chapter.length > 1,
+    Course.attachment.length >= 1,
   ];
   const totalFields = requiredFields.length;
   const missingFields = requiredFields.filter(Boolean).length;
