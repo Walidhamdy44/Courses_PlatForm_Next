@@ -23,6 +23,10 @@ const ChapterList = ({ items, courseId }: chapterListProps) => {
     }
   };
 
+  const onEdit = (id: string) => {
+    router.push(`/teacher/courses/${courseId}/chapter/${id}`);
+  };
+
   return (
     <div className="flex items-start gap-3 flex-col">
       {items.map((item, index) => (
@@ -32,7 +36,13 @@ const ChapterList = ({ items, courseId }: chapterListProps) => {
         >
           <p className="text-[16px] ">{item.chapterTitle}</p>
           <div className="flex items-center gap-2">
-            <Edit color="green" className="cursor-pointer" />
+            <Edit
+              color="green"
+              className="cursor-pointer"
+              onClick={() => {
+                onEdit(item.id);
+              }}
+            />
             <Delete
               color="red"
               className="cursor-pointer"
