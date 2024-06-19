@@ -3,15 +3,17 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { db } from "@/lib/db";
 import { auth } from "@clerk/nextjs/server";
-import { LayoutDashboard, MoveLeftIcon } from "lucide-react";
+import { Eye, LayoutDashboard, MoveLeftIcon } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import TitleChapterForm from "../_components/titleChapterForm";
+import DescriptionChapterForm from "../_components/DescriptionChapterForm";
+import ChapterAccesForm from "../_components/ChapterAccesForm";
 
 const ChapterPage = async ({
   params,
 }: {
-  params: { id: String; chapterId: String };
+  params: { id: string; chapterId: string };
 }) => {
   const { id } = params;
   const { chapterId } = params;
@@ -87,6 +89,30 @@ const ChapterPage = async ({
                   courseId={id}
                   chapterId={chapterId}
                 />
+              </div>
+              <div>
+                <DescriptionChapterForm
+                  initialData={chapter}
+                  courseId={id}
+                  chapterId={chapterId}
+                />
+              </div>
+              <div className="mt-[30px]">
+                <div>
+                  <h2 className="flex items-center gap-4 text-[20px] font-bold">
+                    <Badge>
+                      <Eye />
+                    </Badge>
+                    Chapter Access
+                  </h2>
+                </div>
+                <div>
+                  <ChapterAccesForm
+                    initialData={chapter}
+                    courseId={id}
+                    chapterId={chapterId}
+                  />
+                </div>
               </div>
             </div>
           </div>
