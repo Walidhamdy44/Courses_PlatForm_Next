@@ -82,7 +82,11 @@ const ChapterPage = async ({
                 </h2>
               </div>
               <div>
-                <TitleChapterForm initialData={chapter} courseId={id} />
+                <TitleChapterForm
+                  initialData={chapter}
+                  courseId={id}
+                  chapterId={chapterId}
+                />
               </div>
             </div>
           </div>
