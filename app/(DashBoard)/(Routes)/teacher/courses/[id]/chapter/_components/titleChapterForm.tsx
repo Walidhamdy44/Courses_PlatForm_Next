@@ -23,6 +23,7 @@ interface FormTitle {
     chapterTitle: string;
   };
   courseId: string;
+  chapterId: string;
 }
 
 const formSchema = z.object({
@@ -31,7 +32,7 @@ const formSchema = z.object({
   }),
 });
 
-const TitleChapterForm = ({ courseId, initialData }: FormTitle) => {
+const TitleChapterForm = ({ courseId, initialData, chapterId }: FormTitle) => {
   const router = useRouter();
 
   const [allowed, setAllowed] = useState(false);
@@ -44,8 +45,11 @@ const TitleChapterForm = ({ courseId, initialData }: FormTitle) => {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      const response = await axios.patch(`/api/courses/${courseId}`, values);
-      toast.success("Course Updated Successfully!");
+      const response = await axios.patch(
+        `/api/courses/${courseId}/chapter/${chapterId}`,
+        values
+      );
+      toast.success("chapter Updated Successfully!");
       router.refresh();
       setAllowed(false);
     } catch (error) {
