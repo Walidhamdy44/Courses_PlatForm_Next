@@ -22,8 +22,8 @@ interface FormTitle {
   initialData: {
     chapterTitle: string;
   };
-  courseId: string;
-  chapterId: string;
+  courseId: String;
+  chapterId: String;
 }
 
 const formSchema = z.object({
