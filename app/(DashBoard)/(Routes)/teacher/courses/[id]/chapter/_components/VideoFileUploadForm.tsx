@@ -3,7 +3,7 @@ import * as z from "zod";
 import { useRouter } from "next/navigation";
 import { Chapter, MuxData } from "@prisma/client";
 import { useState } from "react";
-import Image from "next/image";
+import MuxPlayer from "@mux/mux-player-react";
 import axios from "axios";
 
 import toast from "react-hot-toast";
@@ -38,7 +38,7 @@ const ViedoFileUploadForm = ({
         `/api/courses/${courseId}/chapter/${chapterId}`,
         values
       );
-      toast.success("Cover Image Updated Successfully!");
+      toast.success("Chapter Updated Successfully!");
       router.refresh();
       setAllowed(false);
     } catch (error) {
@@ -74,7 +74,24 @@ const ViedoFileUploadForm = ({
         <div className="pt-[5px] text-[16px] text-gray-700">
           {initialData.videoUrl ? (
             <div className="flex items-center justify-center bg-slate-200 p-3 mt-3 aspect-video relative">
-              Video Uploaded
+              <video
+                controls
+                controlsList="nodownload"
+                style={{
+                  accentColor: "#0cea22",
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                  borderRadius: "8px",
+                }}
+              >
+                <source src={initialData.videoUrl} type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+              {/* <MuxPlayer
+                playbackId={initialData.muxData.playbackId || ""}
+                accentColor="#0cea22"
+              /> */}
             </div>
           ) : (
             <div
@@ -97,7 +114,7 @@ const ViedoFileUploadForm = ({
             }}
           />
           <div className="text-sm  text-muted-foreground mt-[20px]">
-            16:9 asbict ratio (Recommended)
+            Video may takes a long time to process Please Wait ..
           </div>
         </div>
       ) : null}
