@@ -74,12 +74,7 @@ const ViedoFileUploadForm = ({
         <div className="pt-[5px] text-[16px] text-gray-700">
           {initialData.videoUrl ? (
             <div className="flex items-center justify-center bg-slate-200 p-3 mt-3 aspect-video relative">
-              <Image
-                src={initialData.videoUrl}
-                alt={initialData?.description || "Course description"}
-                fill
-                className="object-cover rounded-md"
-              />
+              Video Uploaded
             </div>
           ) : (
             <div
