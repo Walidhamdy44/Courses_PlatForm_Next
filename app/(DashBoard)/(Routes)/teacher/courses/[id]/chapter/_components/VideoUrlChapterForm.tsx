@@ -41,7 +41,7 @@ const VideoUrlChapterForm = ({
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: { videoUrl: initialData.videoUrl || null },
+    defaultValues: { videoUrl: initialData?.videoUrl || undefined },
   });
 
   const { isSubmitting, isValid } = form.formState;
