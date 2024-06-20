@@ -3,12 +3,13 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { db } from "@/lib/db";
 import { auth } from "@clerk/nextjs/server";
-import { Eye, LayoutDashboard, MoveLeftIcon } from "lucide-react";
+import { Eye, LayoutDashboard, MoveLeftIcon, VideoIcon } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import TitleChapterForm from "../_components/titleChapterForm";
 import DescriptionChapterForm from "../_components/DescriptionChapterForm";
 import ChapterAccesForm from "../_components/ChapterAccesForm";
+import ViedoFileUploadForm from "../_components/VideoFileUploadForm";
 
 const ChapterPage = async ({
   params,
@@ -114,6 +115,23 @@ const ChapterPage = async ({
                   />
                 </div>
               </div>
+            </div>
+          </div>
+          <div>
+            <div>
+              <h2 className="flex items-center gap-4 text-[20px] font-bold">
+                <Badge>
+                  <VideoIcon />
+                </Badge>
+                Video Chapter
+              </h2>
+            </div>
+            <div>
+              <ViedoFileUploadForm
+                initialData={chapter}
+                courseId={id}
+                chapterId={chapterId}
+              />
             </div>
           </div>
         </div>
