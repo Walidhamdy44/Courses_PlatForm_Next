@@ -21,6 +21,12 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "app/(DashBoard)/(Routes)/teacher/courses/[id]/chapter/_components/SelectType.jsx"
+  ],
   "exclude": ["node_modules"]
 }
