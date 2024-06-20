@@ -1,5 +1,6 @@
 "use client";
 
+import { Badge } from "@/components/ui/badge";
 import { Chapter } from "@prisma/client";
 import axios from "axios";
 import { Delete, Edit } from "lucide-react";
@@ -35,7 +36,9 @@ const ChapterList = ({ items, courseId }: chapterListProps) => {
           className="flex items-center justify-between gap-2 border px-2 py-[15px] w-full rounded-md text-green-500 border-green-300 bg-green-100"
         >
           <p className="text-[16px] ">{item.chapterTitle}</p>
+
           <div className="flex items-center gap-2">
+            {item.ifFree ? <Badge>Free</Badge> : null}
             <Edit
               color="green"
               className="cursor-pointer"
