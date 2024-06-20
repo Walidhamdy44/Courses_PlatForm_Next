@@ -10,6 +10,8 @@ import TitleChapterForm from "../_components/titleChapterForm";
 import DescriptionChapterForm from "../_components/DescriptionChapterForm";
 import ChapterAccesForm from "../_components/ChapterAccesForm";
 import ViedoFileUploadForm from "../_components/VideoFileUploadForm";
+import VideoUrlChapterForm from "../_components/VideoUrlChapterForm";
+import SelectType from "../_components/SelectType";
 
 const ChapterPage = async ({
   params,
@@ -127,7 +129,7 @@ const ChapterPage = async ({
               </h2>
             </div>
             <div>
-              <ViedoFileUploadForm
+              <SelectType
                 initialData={chapter}
                 courseId={id}
                 chapterId={chapterId}
