@@ -80,7 +80,7 @@ const CoursePageDetails = async ({ params }: { params: { id: string } }) => {
       <div className="p-6">
         <div>
           <div className="flex items-center gap-x-4 justify-between mt-[40px]">
-            <h2 className="text-[23px] font-extrabold">Chapter Setup </h2>
+            <h2 className="text-[23px] font-extrabold">Course Setup </h2>
             <PublishCourse
               isPublished={Course.isPublished}
               courseId={Course.id}
