@@ -1,5 +1,3 @@
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
 import { DataTable } from "./_table/DataTable";
 import { columns } from "./_table/columns";
 import { db } from "@/lib/db";
