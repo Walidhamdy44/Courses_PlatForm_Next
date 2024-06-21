@@ -62,6 +62,7 @@ const CoursePageDetails = async ({ params }: { params: { id: string } }) => {
     Course.categoryId,
     Course.chapter.length > 1,
     Course.attachment.length >= 1,
+    Course.chapter.some((cha) => cha.isPublished === true), // Check if at least one chapter is published
   ];
   const totalFields = requiredFields.length;
   const missingFields = requiredFields.filter(Boolean).length;
@@ -77,7 +78,7 @@ const CoursePageDetails = async ({ params }: { params: { id: string } }) => {
         />
       ) : (
         <Banner
-          message=" ✔️     Now This Course Is Published 🤍"
+          message="✔️      Now This Course Is Published 🤍"
           color="bg-green-400"
         />
       )}
@@ -92,7 +93,7 @@ const CoursePageDetails = async ({ params }: { params: { id: string } }) => {
             />
           </div>
           <p className="text-[16px] text-gray-700 py-[20px]">
-            Complate All Fields :{" "}
+            Complate All Fields :
             <span className="font-extrabold text-green-600">
               {Math.round(progressText)}%
             </span>
