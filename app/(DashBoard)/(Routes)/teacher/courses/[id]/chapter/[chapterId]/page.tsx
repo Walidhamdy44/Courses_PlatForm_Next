@@ -9,9 +9,9 @@ import { redirect } from "next/navigation";
 import TitleChapterForm from "../_components/titleChapterForm";
 import DescriptionChapterForm from "../_components/DescriptionChapterForm";
 import ChapterAccesForm from "../_components/ChapterAccesForm";
-import ViedoFileUploadForm from "../_components/VideoFileUploadForm";
-import VideoUrlChapterForm from "../_components/VideoUrlChapterForm";
 import SelectType from "../_components/SelectType";
+import Banner from "@/components/Banner";
+import PubishChapter from "../_components/PubishChapter";
 
 const ChapterPage = async ({
   params,
@@ -50,9 +50,18 @@ const ChapterPage = async ({
   const totalFields = requiredFields.length;
   const missingFields = requiredFields.filter(Boolean).length;
   const progressText = (missingFields / totalFields) * 100;
+  const isComplete = requiredFields.every(Boolean);
 
   return (
     <div>
+      {!chapter.isPublished ? (
+        <Banner message="⚠️    This Chapter is Not Published " />
+      ) : (
+        <Banner
+          message=" ✔️     Now This Chapter Is Published 🤍"
+          color="bg-green-400"
+        />
+      )}
       <div className="p-6">
         <Button variant="secondary" className="hover:shadow-md transition">
           <Link
@@ -64,7 +73,15 @@ const ChapterPage = async ({
           </Link>
         </Button>
         <div className="mt-[30px]">
-          <h2 className="text-[23px] font-extrabold">Chapter Setup </h2>
+          <div className="flex items-center gap-x-4 justify-between">
+            <h2 className="text-[23px] font-extrabold">Chapter Setup </h2>
+            <PubishChapter
+              isPublished={chapter.isPublished}
+              courseId={id}
+              chapterId={chapterId}
+              canPublished={isComplete}
+            />
+          </div>
           <p className="text-[16px] text-gray-700 py-[20px]">
             Complate All Fields :
             <span className="font-extrabold text-green-600">

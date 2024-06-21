@@ -2,10 +2,9 @@
 
 import { Badge } from "@/components/ui/badge";
 import { Chapter } from "@prisma/client";
-import axios from "axios";
-import { Delete, Edit } from "lucide-react";
+import { Pencil } from "lucide-react";
 import { useRouter } from "next/navigation";
-import toast from "react-hot-toast";
+import { useEffect } from "react";
 
 interface chapterListProps {
   items: Chapter[];
@@ -13,16 +12,9 @@ interface chapterListProps {
 }
 const ChapterList = ({ items, courseId }: chapterListProps) => {
   const router = useRouter();
-
-  const onDelet = async (id: string) => {
-    try {
-      await axios.delete(`/api/courses/${courseId}/chapter/${id}`);
-      toast.success("Course deleted Successfully!");
-      router.refresh();
-    } catch (error) {
-      toast.error("Something went wrong!");
-    }
-  };
+  useEffect(() => {
+    router.refresh();
+  }, []);
 
   const onEdit = (id: string) => {
     router.push(`/teacher/courses/${courseId}/chapter/${id}`);
@@ -36,21 +28,21 @@ const ChapterList = ({ items, courseId }: chapterListProps) => {
           className="flex items-center justify-between gap-2 border px-2 py-[15px] w-full rounded-md text-green-500 border-green-300 bg-green-100"
         >
           <p className="text-[16px] ">{item.chapterTitle}</p>
+          {item.ifFree ? <Badge variant="destructive">Free</Badge> : null}
 
           <div className="flex items-center gap-2">
-            {item.ifFree ? <Badge>Free</Badge> : null}
-            <Edit
+            {item.isPublished ? (
+              <Badge>Published</Badge>
+            ) : (
+              <Badge variant="outline" className="bg-gray-200">
+                Draft
+              </Badge>
+            )}
+            <Pencil
               color="green"
               className="cursor-pointer"
               onClick={() => {
                 onEdit(item.id);
-              }}
-            />
-            <Delete
-              color="red"
-              className="cursor-pointer"
-              onClick={() => {
-                onDelet(item.id);
               }}
             />
           </div>

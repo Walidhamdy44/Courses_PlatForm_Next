@@ -16,6 +16,8 @@ import CategoryForm from "../_components/CategoryForm";
 import PriceForm from "../_components/PriceForm";
 import AttachmentForm from "../_components/AttachmentForm";
 import ChapterForm from "../_components/ChapterForm";
+import Banner from "@/components/Banner";
+import PublishCourse from "../_components/PubishCourse";
 
 const CoursePageDetails = async ({ params }: { params: { id: string } }) => {
   const CourseId = params.id;
@@ -64,83 +66,105 @@ const CoursePageDetails = async ({ params }: { params: { id: string } }) => {
   const totalFields = requiredFields.length;
   const missingFields = requiredFields.filter(Boolean).length;
   const progressText = (missingFields / totalFields) * 100;
+
+  const isComplete = requiredFields.every(Boolean);
   return (
-    <div className="p-6">
-      <div>
-        <h2 className="text-[23px] font-extrabold">Course Setup </h2>
-        <p className="text-[16px] text-gray-700 py-[20px]">
-          Complate All Fields :{" "}
-          <span className="font-extrabold text-green-600">
-            {Math.round(progressText)}%
-          </span>
-        </p>
-        <div className="lg:w-[70%] md:w-full sm:w-full pb-[20px]">
-          <Progress value={progressText} />
-        </div>
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-[60px]">
+    <>
+      {!Course.isPublished ? (
+        <Banner
+          message="⚠️    This Course is Not Published Your Studints Cant Visit it !"
+          color="bg-[#fcf128]"
+        />
+      ) : (
+        <Banner
+          message=" ✔️     Now This Course Is Published 🤍"
+          color="bg-green-400"
+        />
+      )}
+      <div className="p-6">
         <div>
-          <div>
-            <h2 className="flex items-center gap-4 text-[20px] font-bold">
-              <Badge>
-                <LayoutDashboard />
-              </Badge>
-              Custmize Your Course
-            </h2>
-          </div>
-          <div>
-            <TitleForm initialData={Course} courseId={CourseId} />
-          </div>
-          <div>
-            <DescForm initialData={Course} courseId={CourseId} />
-          </div>
-          <div>
-            <ImageForm initialData={Course} courseId={CourseId} />
-          </div>
-          <div>
-            <CategoryForm
-              initialData={Course}
-              courseId={CourseId}
-              options={Categories.map((category) => ({
-                label: category.name,
-                value: category.id,
-              }))}
+          <div className="flex items-center gap-x-4 justify-between mt-[40px]">
+            <h2 className="text-[23px] font-extrabold">Chapter Setup </h2>
+            <PublishCourse
+              isPublished={Course.isPublished}
+              courseId={Course.id}
+              canPublished={isComplete}
             />
           </div>
+          <p className="text-[16px] text-gray-700 py-[20px]">
+            Complate All Fields :{" "}
+            <span className="font-extrabold text-green-600">
+              {Math.round(progressText)}%
+            </span>
+          </p>
+          <div className="lg:w-[70%] md:w-full sm:w-full pb-[20px]">
+            <Progress value={progressText} />
+          </div>
         </div>
-        <div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-[60px]">
           <div>
-            <h2 className="flex items-center gap-4 text-[20px] font-bold">
-              <Badge>
-                <ListTodo />
-              </Badge>
-              Courses Chapter
-            </h2>
+            <div>
+              <h2 className="flex items-center gap-4 text-[20px] font-bold">
+                <Badge>
+                  <LayoutDashboard />
+                </Badge>
+                Custmize Your Course
+              </h2>
+            </div>
+            <div>
+              <TitleForm initialData={Course} courseId={CourseId} />
+            </div>
+            <div>
+              <DescForm initialData={Course} courseId={CourseId} />
+            </div>
+            <div>
+              <ImageForm initialData={Course} courseId={CourseId} />
+            </div>
+            <div>
+              <CategoryForm
+                initialData={Course}
+                courseId={CourseId}
+                options={Categories.map((category) => ({
+                  label: category.name,
+                  value: category.id,
+                }))}
+              />
+            </div>
           </div>
           <div>
-            <ChapterForm initialData={Course} courseId={CourseId} />
-          </div>
-          <div>
-            <h2 className="flex items-center gap-4 text-[20px] font-bold mt-7">
-              <Badge>
-                <BadgeDollarSign />
-              </Badge>
-              Sell Your Course
-            </h2>
-            <PriceForm initialData={Course} courseId={CourseId} />
-          </div>
-          <div>
-            <h2 className="flex items-center gap-4 text-[20px] font-bold mt-7">
-              <Badge>
-                <Sliders />
-              </Badge>
-              Resources & Attachments
-            </h2>
-            <AttachmentForm initialData={Course} courseId={CourseId} />
+            <div>
+              <h2 className="flex items-center gap-4 text-[20px] font-bold">
+                <Badge>
+                  <ListTodo />
+                </Badge>
+                Courses Chapter
+              </h2>
+            </div>
+            <div>
+              <ChapterForm initialData={Course} courseId={CourseId} />
+            </div>
+            <div>
+              <h2 className="flex items-center gap-4 text-[20px] font-bold mt-7">
+                <Badge>
+                  <BadgeDollarSign />
+                </Badge>
+                Sell Your Course
+              </h2>
+              <PriceForm initialData={Course} courseId={CourseId} />
+            </div>
+            <div>
+              <h2 className="flex items-center gap-4 text-[20px] font-bold mt-7">
+                <Badge>
+                  <Sliders />
+                </Badge>
+                Resources & Attachments
+              </h2>
+              <AttachmentForm initialData={Course} courseId={CourseId} />
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

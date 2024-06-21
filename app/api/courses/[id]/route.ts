@@ -29,3 +29,40 @@ export const PATCH = async (
     });
   }
 };
+
+export const DELETE = async (
+  req: Request,
+  { params }: { params: { id: string } }
+) => {
+  try {
+    const { userId } = auth();
+
+    const userOwner = await db.course.findUnique({
+      where: { id: params.id, userId },
+    });
+
+    if (!userOwner) {
+      return new NextResponse("Unauthorized", {
+        status: 401,
+      });
+    }
+
+    if (!userId) {
+      return new NextResponse("Unauthorized", {
+        status: 401,
+      });
+    }
+
+    const course = await db.course.delete({
+      where: {
+        id: params.id,
+      },
+    });
+
+    return NextResponse.json(course);
+  } catch (err) {
+    return new NextResponse("Internal Error", {
+      status: 500,
+    });
+  }
+};
