@@ -76,12 +76,7 @@ const CoursePageDetails = async ({ params }: { params: { id: string } }) => {
           message="⚠️    This Course is Not Published Your Studints Cant Visit it !"
           color="bg-[#fcf128]"
         />
-      ) : (
-        <Banner
-          message="✔️      Now This Course Is Published 🤍"
-          color="bg-green-400"
-        />
-      )}
+      ) : null}
       <div className="p-6">
         <div>
           <div className="flex items-center gap-x-4 justify-between mt-[40px]">
