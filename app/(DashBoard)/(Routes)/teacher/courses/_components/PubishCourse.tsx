@@ -11,6 +11,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
+import { useConfetti } from "@/hooks/use-confitte-store";
 import axios from "axios";
 import { Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -28,6 +29,8 @@ const PublishCourse = ({
   canPublished,
 }: PublishCourse) => {
   const router = useRouter();
+
+  const confetti = useConfetti();
 
   const onDelete = async () => {
     try {
@@ -48,6 +51,7 @@ const PublishCourse = ({
         `Course ${isPublished ? "unpublished" : "published"} successfully!`
       );
       router.refresh();
+      !isPublished && confetti.onOpen();
     } catch (error) {
       toast.error("Something went wrong!");
     }
