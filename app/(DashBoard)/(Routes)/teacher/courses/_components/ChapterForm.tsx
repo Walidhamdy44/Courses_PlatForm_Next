@@ -54,7 +54,12 @@ const ChapterForm = ({ courseId, initialData }: ChapterForm) => {
   return (
     <div className="bg-slate-100 p-[15px]  rounded-md shadow-sm mt-6 select-none">
       <div className="flex items-center gap-3 bg-slate-100 justify-between">
-        <span className="text-[19px]">Course Chapters</span>
+        <span className="text-[19px]">
+          Course Chapters{" "}
+          <span className=" block text-[13px] text-gray-400">
+            *At least One Chapter is Published
+          </span>
+        </span>
         {allowed ? (
           <Badge
             className="cursor-pointer"
