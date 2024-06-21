@@ -2,6 +2,7 @@ import { Input } from "@/components/ui/input";
 import { UserButton } from "@clerk/nextjs";
 import MenuMobile from "./MenuMobile";
 import NavMood from "./Nav-Mood";
+import SearchNavBar from "./SearchNavBar";
 
 const NavBar = () => {
   return (
@@ -9,8 +10,8 @@ const NavBar = () => {
       <div className="block lg:hidden">
         <MenuMobile />
       </div>
-      <div className="w-[400px] max-sm:w-auto">
-        <Input placeholder="🔍   Search For Course" />
+      <div className="hidden md:block w-[400px]">
+        <SearchNavBar />
       </div>
       <div className="flex gap-3 items-center">
         <NavMood />
