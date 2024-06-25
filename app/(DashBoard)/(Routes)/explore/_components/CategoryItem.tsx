@@ -16,7 +16,7 @@ const CategoryItem = ({ lable, icon: Icon, value }: categoryItem) => {
   const pathName = usePathname();
   const searchParams = useSearchParams();
 
-  const curentCategryId = searchParams.get("categryId");
+  const curentCategryId = searchParams.get("categoryId");
   const curentTitle = searchParams.get("title");
 
   const isSelected = curentCategryId === value;
@@ -26,7 +26,7 @@ const CategoryItem = ({ lable, icon: Icon, value }: categoryItem) => {
       {
         url: pathName,
         query: {
-          categryId: isSelected ? null : value,
+          categoryId: isSelected ? null : value,
           title: curentTitle,
         },
       },
