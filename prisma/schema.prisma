@@ -103,6 +103,8 @@ model Purchase{
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 }
+
+
 model StripeCustomer {
   id String  @id @default(cuid()) @map("_id")
   userId String
