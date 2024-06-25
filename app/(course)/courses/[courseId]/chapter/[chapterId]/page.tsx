@@ -48,7 +48,7 @@ const ChapterIdPage = async ({
   //
   return (
     <div>
-      {!chapter.ifFree ? (
+      {!chapter?.ifFree ? (
         <Banner message="⚠️      This Chapter is Locked!" />
       ) : null}
       <div className="flex flex-col gap-3 py-[30px]">
@@ -59,6 +59,8 @@ const ChapterIdPage = async ({
           complete={chapter?.isCompleted!}
           purchase={course?.purchase!}
           attachments={attachments}
+          price={course?.price!}
+          courseId={course?.id!}
         />
       </div>
     </div>
