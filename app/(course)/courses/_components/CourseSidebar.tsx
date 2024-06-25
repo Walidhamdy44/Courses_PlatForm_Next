@@ -16,6 +16,7 @@ const CourseSidebar = ({ title, category, chapters = [], course }: course) => {
   ).length;
 
   const chapComp = (completedChapters / totalChapters) * 100;
+
   return (
     <div className="flex items-start bg-white border-r flex-col shadow-md h-full">
       <div className="mx-auto mt-3 shadow-md w-full text-center py-[20px] border-b-2 border-gray-400">
