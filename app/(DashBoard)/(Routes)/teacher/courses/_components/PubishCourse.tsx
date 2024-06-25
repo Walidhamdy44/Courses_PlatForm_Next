@@ -15,6 +15,7 @@ import { useConfetti } from "@/hooks/use-confitte-store";
 import axios from "axios";
 import { Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 import toast from "react-hot-toast";
 
 interface PublishCourse {
@@ -31,6 +32,22 @@ const PublishCourse = ({
   const router = useRouter();
 
   const confetti = useConfetti();
+
+  const makeCourseUn = async () => {
+    try {
+      await axios.patch(`/api/courses/${courseId}`, { isPublished: false });
+      toast.success("Course unpublished successfully!");
+      router.refresh();
+    } catch (error) {
+      toast.error("Something went wrong!");
+    }
+  };
+
+  useEffect(() => {
+    if (!canPublished && isPublished) {
+      makeCourseUn();
+    }
+  }, [canPublished, isPublished]);
 
   const onDelete = async () => {
     try {

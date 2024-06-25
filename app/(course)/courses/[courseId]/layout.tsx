@@ -37,7 +37,6 @@ const layout = async ({
       },
     },
   });
-
   return (
     <div>
       <div className=" md:pl-80 h-[80px] w-full flex fixed inset-y-0 z-40 bg-white">
