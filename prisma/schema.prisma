@@ -54,6 +54,7 @@ model Chapter {
   description String? 
   videoUrl String?
   position Int
+  isCompleted Boolean? @default(false)
   isPublished Boolean @default(false)
   ifFree Boolean @default(false)
   courseId String
