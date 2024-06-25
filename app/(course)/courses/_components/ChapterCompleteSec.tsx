@@ -2,8 +2,9 @@
 
 import { Button } from "@/components/ui/button";
 import { Attachment, Purchase } from "@prisma/client";
-import { CheckCircle, CircleDollarSign, Download } from "lucide-react";
+import { CheckCircle, Download } from "lucide-react";
 import toast from "react-hot-toast";
+import BuyCourse from "./BuyCourse";
 
 interface CompleteChapterProps {
   title: string;
@@ -11,14 +12,18 @@ interface CompleteChapterProps {
   complete: boolean;
   purchase: Purchase[];
   attachments: Attachment[];
+  price: number;
+  courseId: string;
 }
 
 const ChapterCompleteSec = ({
   title,
   desc,
   complete,
+  price,
   purchase,
   attachments,
+  courseId,
 }: CompleteChapterProps) => {
   const CompleteChapter = async () => {
     try {
@@ -33,11 +38,9 @@ const ChapterCompleteSec = ({
     <div className="mt-4">
       {purchase.length === 0 ? (
         <>
-          <div className="flex items-end justify-between gap-4 p-6 shadow-md flex-col md:flex-row">
+          <div className="flex items-center justify-between gap-4 p-6 shadow-md flex-col md:flex-row">
             <p className="text-gray-500 font-semibold text-[20px]">{title}</p>
-            <Button className="flex items-center gap-3">
-              <CircleDollarSign className="h-4 w-4" /> Buy Course
-            </Button>
+            <BuyCourse price={price} courseId={courseId} />
           </div>
           <div className="p-4 flex items-start flex-col gap-4 shadow-inner mt-4">
             <p className="text-[22px] text-teal-600 font-semibold">
