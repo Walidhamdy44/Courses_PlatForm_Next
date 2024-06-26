@@ -14,6 +14,7 @@ interface CompleteChapterProps {
   attachments: Attachment[];
   price: number;
   courseId: string;
+  userId: string;
 }
 
 const ChapterCompleteSec = ({
@@ -24,6 +25,7 @@ const ChapterCompleteSec = ({
   purchase,
   attachments,
   courseId,
+  userId,
 }: CompleteChapterProps) => {
   const CompleteChapter = async () => {
     try {
@@ -40,7 +42,12 @@ const ChapterCompleteSec = ({
         <>
           <div className="flex items-center justify-between gap-4 p-6 shadow-md flex-col md:flex-row">
             <p className="text-gray-500 font-semibold text-[20px]">{title}</p>
-            <BuyCourse price={price} courseId={courseId} />
+            <BuyCourse
+              price={price}
+              courseId={courseId}
+              purchase={purchase}
+              userId={userId}
+            />
           </div>
           <div className="p-4 flex items-start flex-col gap-4 shadow-inner mt-4">
             <p className="text-[22px] text-teal-600 font-semibold">
