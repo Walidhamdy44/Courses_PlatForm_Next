@@ -1,3 +1,4 @@
+import DiscoutSec from "./_components-home/DiscoutSec";
 import HomeSection2 from "./_components-home/HomeSection2";
 import LandingPage from "./_components-home/LandingPage";
 import NavBarHome from "./_components-home/NavBarHome";
@@ -17,6 +18,9 @@ const Home = () => {
       </div>
       <div>
         <TestimonialsSec />
+      </div>
+      <div className="p-4 m-auto">
+        <DiscoutSec />
       </div>
     </div>
   );
