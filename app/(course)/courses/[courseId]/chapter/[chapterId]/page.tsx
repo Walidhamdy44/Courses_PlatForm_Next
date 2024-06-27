@@ -2,8 +2,8 @@ import Banner from "@/components/Banner";
 import { db } from "@/lib/db";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
-import VideoPlayer from "../../../_components/VideoPlayer";
-import ChapterCompleteSec from "../../../_components/ChapterCompleteSec";
+import VideoPlayer from "../../_components/VideoPlayer";
+import ChapterCompleteSec from "../../_components/ChapterCompleteSec";
 
 const ChapterIdPage = async ({
   params,
@@ -52,7 +52,11 @@ const ChapterIdPage = async ({
         <Banner message="⚠️      This Chapter is Locked!" />
       ) : null}
       <div className="flex flex-col gap-3 py-[30px]">
-        <VideoPlayer vidUrl={chapter?.videoUrl!} isFree={chapter?.ifFree!} />
+        <VideoPlayer
+          vidUrl={chapter?.videoUrl!}
+          isFree={chapter?.ifFree!}
+          purchase={course?.purchase!}
+        />
         <ChapterCompleteSec
           title={chapter?.chapterTitle!}
           desc={chapter?.description!}
@@ -62,6 +66,7 @@ const ChapterIdPage = async ({
           price={course?.price!}
           courseId={course?.id!}
           userId={userId!}
+          chapterId={chapter?.id!}
         />
       </div>
     </div>
