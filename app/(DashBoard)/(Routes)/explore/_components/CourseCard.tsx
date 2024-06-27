@@ -29,10 +29,15 @@ const CourseCard = ({ course, nChapters, cat }: card) => {
         <dl>
           <div>
             <dt className="sr-only">Price</dt>
-
-            <dd className="text-sm text-gray-500">
-              <Badge>${course.price}</Badge>
-            </dd>
+            {course.purchase.length !== 0 ? (
+              <dd className="text-sm text-gray-500">
+                <Badge>Purchased</Badge>
+              </dd>
+            ) : (
+              <dd className="text-sm text-gray-500">
+                <Badge>${course.price}</Badge>
+              </dd>
+            )}
           </div>
 
           <div className="mt-2">
