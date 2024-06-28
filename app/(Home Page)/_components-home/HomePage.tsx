@@ -2,6 +2,7 @@ import Image from "next/image";
 import SmallIcon from "./SmallIcon";
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 const LandingPage = () => {
   return (
@@ -107,7 +108,9 @@ const LandingPage = () => {
             </p>
           </div>
           <div>
-            <Button variant="default">Become a Member !</Button>
+            <Link href="/dashboard">
+              <Button variant="default">Become a Member !</Button>
+            </Link>
           </div>
         </div>
       </div>

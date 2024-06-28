@@ -9,7 +9,7 @@ const CourseSidebar = ({ course }) => {
 
   const chapComp = (completedChapters / totalChapters) * 100;
   return (
-    <div className="flex items-start bg-white border-r flex-col shadow-md h-full">
+    <div className="flex items-start bg-white border-r flex-col shadow-md h-full overflow-y-scroll">
       <div className="mx-auto mt-3 shadow-md w-full text-center py-[20px] border-b-2 border-gray-400">
         <h2 className=" pb-[20px] font-bold w-full">{course?.title}</h2>
         <div className="px-[10px] flex items-start flex-col gap-4">
