@@ -1,11 +1,5 @@
-import React from 'react'
-
 const page = () => {
-  return (
-    <div>
-      analtics
-    </div>
-  )
-}
+  return <div>We Are Review This Page !!</div>;
+};
 
-export default page
+export default page;
