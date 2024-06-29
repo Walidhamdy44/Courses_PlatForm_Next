@@ -1,10 +1,10 @@
 import { Progress } from "@/components/ui/progress";
 import CourseSideBarItem from "./CourseSideBarItem";
 
-const CourseSidebar = ({ course }) => {
+const CourseSidebar = ({ course }: any) => {
   const totalChapters = course!.chapter.length;
   const completedChapters = course!.chapter.filter(
-    (chapter) => chapter.isCompleted
+    (chapter: any) => chapter.isCompleted
   ).length;
 
   const chapComp = (completedChapters / totalChapters) * 100;
@@ -21,7 +21,7 @@ const CourseSidebar = ({ course }) => {
       </div>
       <div className="w-full">
         {course!.chapter.length > 0 &&
-          course!.chapter.map((cha) => {
+          course!.chapter.map((cha: any) => {
             return (
               <CourseSideBarItem key={cha.id} cha={cha} courseId={course.id} />
             );

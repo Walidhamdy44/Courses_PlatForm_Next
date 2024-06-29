@@ -6,7 +6,7 @@ import React from "react";
 import { FcLeft } from "react-icons/fc";
 import CoursesMenuMobile from "./CoursesMenuMobile";
 
-const CourseNavBar = ({ course }) => {
+const CourseNavBar = ({ course }: any) => {
   return (
     <div className="flex items-center justify-between py-[10px] px-[30px] w-full shadow-lg z-20 ">
       <div className="block lg:hidden">

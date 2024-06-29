@@ -3,7 +3,6 @@ import { redirect } from "next/navigation";
 import { db } from "@/lib/db";
 import CourseSidebar from "./_components/CourseSidebar";
 import CourseNavBar from "./_components/CourseNavBar";
-import CoursesMenuMobile from "./_components/CoursesMenuMobile";
 
 const layout = async ({
   children,
