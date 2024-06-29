@@ -25,7 +25,7 @@ interface PriceForm {
 }
 
 const formSchema = z.object({
-  price: z.string().min(2, {
+  price: z.number().min(2, {
     message: "Price of Course is Required.",
   }),
 });
@@ -44,7 +44,7 @@ const PriceForm = ({ courseId, initialData }: PriceForm) => {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       await axios.patch(`/api/courses/${courseId}`, {
-        price: parseFloat(values.price),
+        price: values.price,
       });
       toast.success("Course price Updated Successfully!");
       router.refresh();
