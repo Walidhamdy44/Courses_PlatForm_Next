@@ -22,10 +22,10 @@ import { Checkbox } from "@/components/ui/checkbox";
 
 interface FormTitle {
   initialData: {
-    ifFree: Boolean;
+    ifFree: boolean;
   };
-  courseId: String;
-  chapterId: String;
+  courseId: string;
+  chapterId: string;
 }
 
 const formSchema = z.object({
@@ -49,7 +49,7 @@ const ChapterAccesForm = ({ courseId, initialData, chapterId }: FormTitle) => {
         `/api/courses/${courseId}/chapter/${chapterId}`,
         values
       );
-      toast.success("chapter Updated Successfully!");
+      toast.success("Chapter Updated Successfully!");
       router.refresh();
       setAllowed(false);
     } catch (error) {
@@ -58,7 +58,7 @@ const ChapterAccesForm = ({ courseId, initialData, chapterId }: FormTitle) => {
   };
 
   return (
-    <div className="bg-slate-100 p-[15px]  rounded-md shadow-sm mt-6 select-none">
+    <div className="bg-slate-100 p-[15px] rounded-md shadow-sm mt-6 select-none">
       <div className="flex items-center gap-3 bg-slate-100 justify-between">
         <span className="text-[19px]">Chapter Access</span>
         {allowed ? (
@@ -99,7 +99,6 @@ const ChapterAccesForm = ({ courseId, initialData, chapterId }: FormTitle) => {
                 <FormItem>
                   <FormControl>
                     <Checkbox
-                      {...field}
                       onCheckedChange={field.onChange}
                       checked={field.value}
                     />
@@ -107,8 +106,8 @@ const ChapterAccesForm = ({ courseId, initialData, chapterId }: FormTitle) => {
                   <FormLabel className="ml-3">Mark as Free</FormLabel>
                   <div>
                     <FormDescription>
-                      Check This Box If You Want to make this chapter is Free To
-                      Perview
+                      Check This Box If You Want to make this chapter Free to
+                      Preview
                     </FormDescription>
                   </div>
                   <FormMessage />
@@ -123,7 +122,7 @@ const ChapterAccesForm = ({ courseId, initialData, chapterId }: FormTitle) => {
                   setAllowed(!allowed);
                 }}
               >
-                Cancle
+                Cancel
               </Button>
               <Button type="submit" disabled={!isValid || isSubmitting}>
                 Update ⚡
