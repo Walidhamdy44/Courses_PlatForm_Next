@@ -12,7 +12,7 @@ export const POST = async (
     const { url } = await req.json();
 
     const userOwner = await db.course.findUnique({
-      where: { id: params.id, userId },
+      where: { id: params.id, userId: userId as string },
     });
 
     if (!userOwner) {

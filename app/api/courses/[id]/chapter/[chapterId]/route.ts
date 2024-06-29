@@ -5,13 +5,13 @@ import { NextResponse } from "next/server";
 
 export const DELETE = async (
   req: Request,
-  { params }: { params: { id: string; chapterId: String } }
+  { params }: { params: { id: string; chapterId: string } }
 ) => {
   try {
     const { userId } = auth();
 
     const userOwner = await db.course.findUnique({
-      where: { id: params.id, userId },
+      where: { id: params.id, userId: userId as string },
     });
 
     if (!userOwner) {
@@ -91,7 +91,7 @@ export const PATCH = async (
 
       // Delete existing video asset if it exists
       if (existingVideo) {
-        await video.assets.del(existingVideo.assetsId);
+        await video.assets.delete(existingVideo.assetsId);
         await db.muxData.delete({
           where: {
             id: existingVideo.id,

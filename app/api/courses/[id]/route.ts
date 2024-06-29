@@ -38,7 +38,7 @@ export const DELETE = async (
     const { userId } = auth();
 
     const userOwner = await db.course.findUnique({
-      where: { id: params.id, userId },
+      where: { id: params.id, userId: userId as string },
     });
 
     if (!userOwner) {

@@ -4,13 +4,13 @@ import { NextResponse } from "next/server";
 
 export const DELETE = async (
   req: Request,
-  { params }: { params: { id: string; atId: String } }
+  { params }: { params: { id: string; atId: string } }
 ) => {
   try {
     const { userId } = auth();
 
     const userOwner = await db.course.findUnique({
-      where: { id: params.id, userId },
+      where: { id: params.id, userId: userId as string },
     });
 
     if (!userOwner) {
