@@ -42,7 +42,7 @@ const ExplorePage = async ({ searchParams }: searchParams) => {
             <CourseCard
               course={course}
               nChapters={course.chapter.length}
-              cat={course.category.name}
+              cat={course.category?.name!}
             />
           </div>
         ))}
