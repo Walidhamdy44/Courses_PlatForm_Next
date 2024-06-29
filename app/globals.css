@@ -78,6 +78,27 @@
   background-color: var(--green);
   box-shadow: rgb(108 247 157) -7px 1px 18px 6px;
 }
+
+/* styles/globals.css or a specific CSS module */
+::-webkit-scrollbar {
+  width: 12px; /* Width of the scrollbar */
+}
+
+::-webkit-scrollbar-track {
+  background: #21ec8d; /* Track color */
+  border-radius: 10px; /* Track rounded corners */
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1fdfbf; /* Scrollbar thumb color */
+  border-radius: 10px; /* Thumb rounded corners */
+  transition: 0.5s;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #23df55; /* Thumb color on hover */
+}
+
 .cl-internal-1j7ahlv {
   width: 40px !important;
   height: 40px !important;
