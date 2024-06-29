@@ -60,18 +60,9 @@ const UserInfo = async () => {
             </p>
             <p className="mt-2 text-sm text-gray-600">
               <span className="font-medium">Phone:</span>{" "}
-              {user?.phoneNumbers === "" ? user?.phoneNumbers : "Not avaleble"}
-            </p>
-            <p className="mt-2 text-sm text-gray-600">
-              <span className="font-medium">Social:</span>
-              <span className="text-indigo-600 hover:text-indigo-800">
-                {user?.primaryPhoneNumber
-                  ? user?.primaryPhoneNumber
-                  : "Not avaleble"}
-              </span>
-            </p>
-            <p className="mt-2 text-sm text-gray-600">
-              <span className="font"></span>
+              {user?.phoneNumbers && user.phoneNumbers.length > 0
+                ? user.phoneNumbers.join(", ")
+                : "Not available"}
             </p>
           </div>
           <div className="mt-6 flex items-center gap-5">
