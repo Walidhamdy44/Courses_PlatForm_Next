@@ -1,18 +1,21 @@
+import Image from "next/image";
 import Link from "next/link";
 
 export default function Custom404() {
   return (
     <div className="flex h-screen flex-col bg-white">
-      <img
+      <Image
         src="https://images.unsplash.com/photo-1558769132-cb1aea458c5e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1548&q=80"
         alt=""
+        width={200}
+        height={500}
         className="h-64 w-full object-cover"
       />
 
       <div className="flex flex-1 items-center justify-center">
         <div className="mx-auto max-w-xl px-4 py-8 text-center">
           <h1 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-            We can't find that page.
+            We can&apos;t find that page.
           </h1>
 
           <p className="mt-4 text-gray-500">
