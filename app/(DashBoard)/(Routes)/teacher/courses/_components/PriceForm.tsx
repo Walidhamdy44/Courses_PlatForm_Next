@@ -19,32 +19,32 @@ import { Edit, X } from "lucide-react";
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 
-interface PriceForm {
+interface PriceFormProps {
   initialData: Course;
   courseId: string;
 }
 
 const formSchema = z.object({
-  price: z.number().min(2, {
+  price: z.string().min(2, {
     message: "Price of Course is Required.",
   }),
 });
 
-const PriceForm = ({ courseId, initialData }: PriceForm) => {
+const PriceForm = ({ courseId, initialData }: PriceFormProps) => {
   const router = useRouter();
 
   const [allowed, setAllowed] = useState(false);
-  // 1. Define your form.
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: { price: initialData.price || undefined },
+    defaultValues: { price: initialData.price?.toString() || "" },
   });
   const { isSubmitting, isValid } = form.formState;
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       await axios.patch(`/api/courses/${courseId}`, {
-        price: values.price,
+        price: parseFloat(values.price),
       });
       toast.success("Course price Updated Successfully!");
       router.refresh();
