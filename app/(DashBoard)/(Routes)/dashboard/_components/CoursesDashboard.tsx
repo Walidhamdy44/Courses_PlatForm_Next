@@ -11,24 +11,47 @@ const CoursesDashboard = async () => {
     return redirect("/");
   }
 
-  const coursePurchased = await db.purchase.findMany({
-    where: {
-      userId,
-    },
-    include: {
-      course: {
-        include: {
-          category: true,
-          chapter: {
-            where: {
-              isPublished: true,
+  let coursePurchased: Array<{
+    id: string;
+    course: {
+      id: string;
+      userId: string;
+      title: string;
+      description: string | null;
+      imgUrl: string | null;
+      price: number | null;
+      isPublished: boolean;
+      categoryId: string | null;
+      created_at: Date;
+      updated_at: Date;
+      category: { name: string } | null;
+      chapter: Array<{ isPublished: boolean }>;
+    };
+  }> = [];
+
+  try {
+    coursePurchased = await db.purchase.findMany({
+      where: {
+        userId,
+      },
+      include: {
+        course: {
+          include: {
+            category: true,
+            chapter: {
+              where: {
+                isPublished: true,
+              },
             },
+            purchase: true,
           },
-          purchase: true,
         },
       },
-    },
-  });
+    });
+  } catch (error) {
+    console.log("Error fetching courses:");
+    // Optionally, you can handle the error by showing a message to the user
+  }
 
   return (
     <>
