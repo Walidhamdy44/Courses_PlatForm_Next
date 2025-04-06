@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { db } from "@/lib/db";
 import Categories from "./_components/Categories";
 import SearchNavBar from "../../_components/SearchNavBar";
@@ -7,15 +9,10 @@ import { getCourse } from "@/actions/get-courses";
 import CourseCard from "./_components/CourseCard";
 import NoCourses from "./_components/NoCourses";
 
-interface ExplorePageProps {
-  searchParams: {
-    title?: string;
-    categoryId?: string;
-  };
-}
+const ExplorePage = async ({ searchParams }: { searchParams: any }) => {
+  const resolvedSearchParams = await searchParams;
+  const { userId } = await auth();
 
-const ExplorePage = async ({ searchParams }: ExplorePageProps) => {
-  const { userId } = await auth(); // <-- await here
   if (!userId) {
     return redirect("/");
   }
@@ -28,8 +25,9 @@ const ExplorePage = async ({ searchParams }: ExplorePageProps) => {
 
   const courses = await getCourse({
     userId,
-    ...searchParams,
+    ...resolvedSearchParams,
   });
+
   return (
     <div className="p-6">
       <div className="w-[95%] block md:hidden mb-[30px]">
@@ -42,7 +40,7 @@ const ExplorePage = async ({ searchParams }: ExplorePageProps) => {
             <CourseCard
               course={course}
               nChapters={course.chapter.length}
-              cat={course.category?.name!}
+              cat={course.category?.name || ""}
             />
           </div>
         ))}
