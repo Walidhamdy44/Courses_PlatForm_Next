@@ -7,15 +7,15 @@ import { getCourse } from "@/actions/get-courses";
 import CourseCard from "./_components/CourseCard";
 import NoCourses from "./_components/NoCourses";
 
-interface searchParams {
+interface ExplorePageProps {
   searchParams: {
-    title: string;
-    categoryId: string;
+    title?: string;
+    categoryId?: string;
   };
 }
 
-const ExplorePage = async ({ searchParams }: searchParams) => {
-  const { userId } = await auth();
+const ExplorePage = async ({ searchParams }: ExplorePageProps) => {
+  const { userId } = await auth(); // <-- await here
   if (!userId) {
     return redirect("/");
   }
