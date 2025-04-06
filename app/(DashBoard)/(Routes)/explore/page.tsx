@@ -1,21 +1,5 @@
-import { db } from "@/lib/db";
-import Categories from "./_components/Categories";
-import SearchNavBar from "../../_components/SearchNavBar";
-import { auth } from "@clerk/nextjs/server";
-import { redirect } from "next/navigation";
-import { getCourse } from "@/actions/get-courses";
-import CourseCard from "./_components/CourseCard";
-import NoCourses from "./_components/NoCourses";
-
-interface ExplorePageProps {
-  searchParams: {
-    title?: string;
-    categoryId?: string;
-  };
-}
-
 const ExplorePage = async ({ searchParams }: ExplorePageProps) => {
-  const { userId } = auth();
+  const { userId } = await auth(); // <-- notice the "await" here
   if (!userId) {
     return redirect("/");
   }
@@ -55,5 +39,3 @@ const ExplorePage = async ({ searchParams }: ExplorePageProps) => {
     </div>
   );
 };
-
-export default ExplorePage;
