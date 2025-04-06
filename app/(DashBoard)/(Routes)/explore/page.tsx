@@ -1,5 +1,21 @@
-const ExplorePage = async ({ searchParams }: ExplorePageProps) => {
-  const { userId } = await auth(); // <-- notice the "await" here
+import { db } from "@/lib/db";
+import Categories from "./_components/Categories";
+import SearchNavBar from "../../_components/SearchNavBar";
+import { auth } from "@clerk/nextjs/server";
+import { redirect } from "next/navigation";
+import { getCourse } from "@/actions/get-courses";
+import CourseCard from "./_components/CourseCard";
+import NoCourses from "./_components/NoCourses";
+
+interface searchParams {
+  searchParams: {
+    title: string;
+    categoryId: string;
+  };
+}
+
+const ExplorePage = async ({ searchParams }: searchParams) => {
+  const { userId } = await auth();
   if (!userId) {
     return redirect("/");
   }
@@ -14,7 +30,6 @@ const ExplorePage = async ({ searchParams }: ExplorePageProps) => {
     userId,
     ...searchParams,
   });
-
   return (
     <div className="p-6">
       <div className="w-[95%] block md:hidden mb-[30px]">
@@ -22,20 +37,19 @@ const ExplorePage = async ({ searchParams }: ExplorePageProps) => {
       </div>
       <Categories items={categories} />
       <div className="grid mt-[30px] gap-x-2 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-        {courses.length > 0 ? (
-          courses.map((course) => (
-            <div key={course.id}>
-              <CourseCard
-                course={course}
-                nChapters={course.chapter.length}
-                cat={course.category?.name!}
-              />
-            </div>
-          ))
-        ) : (
-          <NoCourses />
-        )}
+        {courses.map((course) => (
+          <div key={course.id}>
+            <CourseCard
+              course={course}
+              nChapters={course.chapter.length}
+              cat={course.category?.name!}
+            />
+          </div>
+        ))}
       </div>
+      {courses.length === 0 && <NoCourses />}
     </div>
   );
 };
+
+export default ExplorePage;
