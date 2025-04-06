@@ -7,14 +7,14 @@ import { getCourse } from "@/actions/get-courses";
 import CourseCard from "./_components/CourseCard";
 import NoCourses from "./_components/NoCourses";
 
-interface searchParams {
+interface ExplorePageProps {
   searchParams: {
-    title: string;
-    categoryId: string;
+    title?: string;
+    categoryId?: string;
   };
 }
 
-const ExplorePage = async ({ searchParams }: searchParams) => {
+const ExplorePage = async ({ searchParams }: ExplorePageProps) => {
   const { userId } = auth();
   if (!userId) {
     return redirect("/");
@@ -30,6 +30,7 @@ const ExplorePage = async ({ searchParams }: searchParams) => {
     userId,
     ...searchParams,
   });
+
   return (
     <div className="p-6">
       <div className="w-[95%] block md:hidden mb-[30px]">
@@ -37,17 +38,20 @@ const ExplorePage = async ({ searchParams }: searchParams) => {
       </div>
       <Categories items={categories} />
       <div className="grid mt-[30px] gap-x-2 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-        {courses.map((course) => (
-          <div key={course.id}>
-            <CourseCard
-              course={course}
-              nChapters={course.chapter.length}
-              cat={course.category?.name!}
-            />
-          </div>
-        ))}
+        {courses.length > 0 ? (
+          courses.map((course) => (
+            <div key={course.id}>
+              <CourseCard
+                course={course}
+                nChapters={course.chapter.length}
+                cat={course.category?.name!}
+              />
+            </div>
+          ))
+        ) : (
+          <NoCourses />
+        )}
       </div>
-      {courses.length === 0 && <NoCourses />}
     </div>
   );
 };
