@@ -7,16 +7,16 @@ import TestimonialsSec from "./_components-home/TestemonilsSec";
 const Home = () => {
   return (
     <div className="flex items-start flex-col w-full h-full">
-      <div>
+      <div className="w-full">
         <NavBarHome />
       </div>
       <div className="w-full">
         <LandingPage />
       </div>
-      <div>
+      <div className="w-full">
         <HomeSection2 />
       </div>
-      <div>
+      <div className="w-full">
         <TestimonialsSec />
       </div>
       <div className="p-4 m-auto">
