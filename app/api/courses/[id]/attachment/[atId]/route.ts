@@ -4,13 +4,14 @@ import { NextResponse } from "next/server";
 
 export const DELETE = async (
   req: Request,
-  { params }: { params: { id: string; atId: string } }
+  { params }: { params: Promise<{ id: string; atId: string }> }
 ) => {
   try {
     const { userId } = auth();
+    const { id, atId } = await params;
 
     const userOwner = await db.course.findUnique({
-      where: { id: params.id, userId: userId as string },
+      where: { id: id, userId: userId as string },
     });
 
     if (!userOwner) {
@@ -27,8 +28,8 @@ export const DELETE = async (
 
     const attachment = await db.attachment.delete({
       where: {
-        id: params.atId,
-        courseId: params.id,
+        id: atId,
+        courseId: id,
       },
     });
 

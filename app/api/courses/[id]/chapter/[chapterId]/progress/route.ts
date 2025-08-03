@@ -4,10 +4,11 @@ import { NextResponse } from "next/server";
 
 export const PATCH = async (
   req: Request,
-  { params }: { params: { id: string; chapterId: string } }
+  { params }: { params: Promise<{ id: string; chapterId: string }> }
 ) => {
   try {
     const { userId } = await auth();
+    const { id, chapterId } = await params;
 
     if (!userId) {
       return new NextResponse("Unauthorized", {
@@ -19,8 +20,8 @@ export const PATCH = async (
 
     const chapter = await db.chapter.update({
       where: {
-        id: params.chapterId,
-        courseId: params.id,
+        id: chapterId,
+        courseId: id,
       },
       data: {
         isCompleted: values.isCompleted,

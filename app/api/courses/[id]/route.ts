@@ -5,10 +5,10 @@ import { NextResponse } from "next/server";
 // Patch For Title Data ..>
 export const PATCH = async (
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) => {
   try {
-    const id = params.id;
+    const { id } = await params;
     const { userId } = auth();
 
     const values = await req.json();
@@ -32,13 +32,14 @@ export const PATCH = async (
 
 export const DELETE = async (
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) => {
   try {
     const { userId } = auth();
+    const { id } = await params;
 
     const userOwner = await db.course.findUnique({
-      where: { id: params.id, userId: userId as string },
+      where: { id: id, userId: userId as string },
     });
 
     if (!userOwner) {
@@ -55,7 +56,7 @@ export const DELETE = async (
 
     const course = await db.course.delete({
       where: {
-        id: params.id,
+        id: id,
       },
     });
 

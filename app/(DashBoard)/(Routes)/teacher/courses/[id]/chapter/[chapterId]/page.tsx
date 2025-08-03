@@ -1,32 +1,32 @@
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { db } from "@/lib/db";
-import { auth } from "@clerk/nextjs/server";
-import { Eye, LayoutDashboard, MoveLeftIcon, VideoIcon } from "lucide-react";
-import Link from "next/link";
+import { Eye, MoveLeft as MoveLeftIcon, VideoIcon } from "lucide-react";
 import { redirect } from "next/navigation";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import Banner from "@/components/Banner";
+import { auth } from "@clerk/nextjs/server";
+import PublishChapter from "../_components/PubishChapter";
 import TitleChapterForm from "../_components/titleChapterForm";
 import DescriptionChapterForm from "../_components/DescriptionChapterForm";
-import ChapterAccesForm from "../_components/ChapterAccesForm";
 import SelectType from "../_components/SelectType";
-import Banner from "@/components/Banner";
-import PubishChapter from "../_components/PubishChapter";
 
-const ChapterPage = async ({
-  params,
-}: {
-  params: { id: string; chapterId: string };
-}) => {
-  const { id } = params;
-  const { chapterId } = params;
+interface PageProps {
+  params: Promise<{
+    id: string;
+    chapterId: string;
+  }>;
+}
+
+const ChapterPage = async ({ params }: PageProps) => {
+  const { id, chapterId } = await params;
   const { userId } = auth();
 
-  //
   if (!userId) {
     return redirect("/");
   }
-  // fitch  Chapter from db
+
   const chapter = await db.chapter.findUnique({
     where: {
       id: chapterId,
@@ -53,7 +53,7 @@ const ChapterPage = async ({
   const isComplete = requiredFields.every(Boolean);
 
   return (
-    <div>
+    <>
       {!chapter.isPublished ? (
         <Banner message="⚠️    This Chapter is Not Published " />
       ) : (
@@ -75,7 +75,7 @@ const ChapterPage = async ({
         <div className="mt-[30px]">
           <div className="flex items-center gap-x-4 justify-between">
             <h2 className="text-[23px] font-extrabold">Chapter Setup </h2>
-            <PubishChapter
+            <PublishChapter
               isPublished={chapter.isPublished}
               courseId={id}
               chapterId={chapterId}
@@ -95,67 +95,48 @@ const ChapterPage = async ({
         <div className="grid grid-cols-1 md:grid-cols-2 mt-[40px] gap-6">
           <div>
             <div>
-              <div>
-                <h2 className="flex items-center gap-4 text-[20px] font-bold">
-                  <Badge>
-                    <LayoutDashboard />
-                  </Badge>
-                  Custmize Your Chapter
-                </h2>
-              </div>
-              <div>
-                <TitleChapterForm
-                  initialData={chapter}
-                  courseId={id}
-                  chapterId={chapterId}
-                />
-              </div>
-              <div>
-                <DescriptionChapterForm
-                  initialData={chapter}
-                  courseId={id}
-                  chapterId={chapterId}
-                />
-              </div>
-              <div className="mt-[30px]">
-                <div>
-                  <h2 className="flex items-center gap-4 text-[20px] font-bold">
-                    <Badge>
-                      <Eye />
-                    </Badge>
-                    Chapter Access
-                  </h2>
-                </div>
-                <div>
-                  <ChapterAccesForm
-                    initialData={chapter}
-                    courseId={id}
-                    chapterId={chapterId}
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-          <div>
-            <div>
               <h2 className="flex items-center gap-4 text-[20px] font-bold">
                 <Badge>
                   <VideoIcon />
                 </Badge>
-                Video Chapter
+                Custmize Your Chapter
               </h2>
             </div>
             <div>
-              <SelectType
+              <TitleChapterForm
                 initialData={chapter}
                 courseId={id}
                 chapterId={chapterId}
               />
             </div>
+            <div>
+              <DescriptionChapterForm
+                initialData={chapter}
+                courseId={id}
+                chapterId={chapterId}
+              />
+            </div>
+            <div className="mt-[30px]">
+              <div>
+                <h2 className="flex items-center gap-4 text-[20px] font-bold">
+                  <Badge>
+                    <Eye />
+                  </Badge>
+                  Chapter Access
+                </h2>
+              </div>
+              <div>
+                <SelectType
+                  initialData={chapter}
+                  courseId={id}
+                  chapterId={chapterId}
+                />
+              </div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

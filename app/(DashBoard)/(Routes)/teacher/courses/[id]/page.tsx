@@ -19,8 +19,13 @@ import ChapterForm from "../_components/ChapterForm";
 import Banner from "@/components/Banner";
 import PublishCourse from "../_components/PubishCourse";
 
-const CoursePageDetails = async ({ params }: { params: { id: string } }) => {
-  const CourseId = params.id;
+const CoursePageDetails = async ({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) => {
+  const { id } = await params;
+  const CourseId = id;
   const { userId } = auth();
 
   // fitch  course from db
