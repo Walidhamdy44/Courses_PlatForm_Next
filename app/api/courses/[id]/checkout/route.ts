@@ -6,10 +6,12 @@ import Stripe from "stripe";
 
 export const POST = async (
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) => {
   try {
     const user = await currentUser();
+    const { id } = await params;
+    
     if (!user || !user.id || !user.emailAddresses[0].emailAddress) {
       return new NextResponse("Unauthorized", {
         status: 401,
@@ -45,7 +47,7 @@ export const POST = async (
     // Find the course
     const course = await db.course.findUnique({
       where: {
-        id: params.id,
+        id: id,
         isPublished: true,
       },
     });

@@ -5,13 +5,14 @@ import { NextResponse } from "next/server";
 
 export const DELETE = async (
   req: Request,
-  { params }: { params: { id: string; chapterId: string } }
+  { params }: { params: Promise<{ id: string; chapterId: string }> }
 ) => {
   try {
     const { userId } = auth();
+    const { id, chapterId } = await params;
 
     const userOwner = await db.course.findUnique({
-      where: { id: params.id, userId: userId as string },
+      where: { id: id, userId: userId as string },
     });
 
     if (!userOwner) {
@@ -28,8 +29,8 @@ export const DELETE = async (
 
     const chapter = await db.chapter.delete({
       where: {
-        id: params.chapterId,
-        courseId: params.id,
+        id: chapterId,
+        courseId: id,
       },
     });
 
@@ -48,10 +49,12 @@ const { video } = new Mux({
 
 export const PATCH = async (
   req: Request,
-  { params }: { params: { id: string; chapterId: string } }
+  { params }: { params: Promise<{ id: string; chapterId: string }> }
 ) => {
   try {
     const { userId } = auth();
+    const { id, chapterId } = await params;
+    
     if (!userId) {
       return new NextResponse("Unauthorized", {
         status: 401,
@@ -60,7 +63,7 @@ export const PATCH = async (
 
     const values = await req.json();
     const userOwner = await db.course.findUnique({
-      where: { id: params.id, userId },
+      where: { id: id, userId },
     });
 
     if (!userOwner) {
@@ -74,8 +77,8 @@ export const PATCH = async (
     // Update chapter information
     chapter = await db.chapter.update({
       where: {
-        id: params.chapterId,
-        courseId: params.id,
+        id: chapterId,
+        courseId: id,
       },
       data: { ...values },
     });
@@ -85,7 +88,7 @@ export const PATCH = async (
       // Find existing Mux data for the chapter
       const existingVideo = await db.muxData.findFirst({
         where: {
-          chapterId: params.chapterId,
+          chapterId: chapterId,
         },
       });
 
@@ -111,7 +114,7 @@ export const PATCH = async (
       await db.muxData.create({
         data: {
           assetsId: asset.id,
-          chapterId: params.chapterId,
+          chapterId: chapterId,
           playbackId: asset.playback_ids?.[0]?.id,
         },
       });

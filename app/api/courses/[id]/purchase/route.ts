@@ -4,10 +4,11 @@ import { NextResponse } from "next/server";
 
 export const POST = async (
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) => {
   try {
     const { userId } = await auth();
+    const { id } = await params;
 
     if (!userId) {
       return new NextResponse("Unauthorized", {
@@ -17,7 +18,7 @@ export const POST = async (
 
     const purchase = await db.purchase.create({
       data: {
-        courseId: params.id,
+        courseId: id,
         userId,
       },
     });

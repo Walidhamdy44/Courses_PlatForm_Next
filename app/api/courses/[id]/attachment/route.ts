@@ -5,14 +5,15 @@ import { NextResponse } from "next/server";
 // Patch For Title Data ..>
 export const POST = async (
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) => {
   try {
     const { userId } = auth();
+    const { id } = await params;
     const { url } = await req.json();
 
     const userOwner = await db.course.findUnique({
-      where: { id: params.id, userId: userId as string },
+      where: { id: id, userId: userId as string },
     });
 
     if (!userOwner) {
@@ -30,7 +31,7 @@ export const POST = async (
       data: {
         url,
         name: url.split("/").pop(),
-        courseId: params.id,
+        courseId: id,
       },
     });
     return NextResponse.json(attachment);

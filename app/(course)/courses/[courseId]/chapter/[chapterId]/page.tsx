@@ -5,15 +5,16 @@ import { redirect } from "next/navigation";
 import VideoPlayer from "../../_components/VideoPlayer";
 import ChapterCompleteSec from "../../_components/ChapterCompleteSec";
 
-const ChapterIdPage = async ({
-  params,
-}: {
-  params: {
+interface ChapterPageProps {
+  params: Promise<{
     courseId: string;
     chapterId: string;
-  };
-}) => {
+  }>;
+}
+
+const ChapterPage = async ({ params }: ChapterPageProps) => {
   const { userId } = auth();
+  const { courseId, chapterId } = await params;
 
   if (!userId) {
     return redirect("/");
@@ -21,23 +22,20 @@ const ChapterIdPage = async ({
 
   const chapter = await db.chapter.findUnique({
     where: {
-      id: params.chapterId,
+      id: chapterId,
       isPublished: true,
     },
   });
 
-  //
-
   const attachments = await db.attachment.findMany({
     where: {
-      courseId: params.courseId,
+      courseId: courseId,
     },
   });
 
-  //
   const course = await db.course.findUnique({
     where: {
-      id: params.courseId,
+      id: courseId,
       isPublished: true,
     },
     include: {
@@ -45,7 +43,6 @@ const ChapterIdPage = async ({
     },
   });
 
-  //
   return (
     <div>
       {course!.purchase.length < 1 ? (
@@ -73,4 +70,4 @@ const ChapterIdPage = async ({
   );
 };
 
-export default ChapterIdPage;
+export default ChapterPage;
