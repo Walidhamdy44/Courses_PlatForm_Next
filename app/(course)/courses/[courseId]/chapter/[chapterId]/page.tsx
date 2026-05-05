@@ -38,27 +38,36 @@ const ChapterPage = async ({ params }: ChapterPageProps) => {
       id: courseId,
       isPublished: true,
     },
-    include: {
-      purchase: true,
+  });
+
+  const purchase = await db.purchase.findUnique({
+    where: {
+      userId_courseId: { userId, courseId },
+    },
+  });
+
+  const userProgress = await db.userProgress.findUnique({
+    where: {
+      chapterId_userId: { chapterId, userId },
     },
   });
 
   return (
     <div>
-      {course!.purchase.length < 1 ? (
+      {purchase === null ? (
         <Banner message="⚠️      This Chapter is Locked!" />
       ) : null}
       <div className="flex flex-col gap-3 py-[30px]">
         <VideoPlayer
           vidUrl={chapter?.videoUrl!}
           isFree={chapter?.ifFree!}
-          purchase={course?.purchase!}
+          purchase={purchase}
         />
         <ChapterCompleteSec
           title={chapter?.chapterTitle!}
           desc={chapter?.description!}
-          complete={chapter?.isCompleted!}
-          purchase={course?.purchase!}
+          complete={userProgress?.isCompleted ?? false}
+          purchase={purchase}
           attachments={attachments}
           price={course?.price!}
           courseId={course?.id!}

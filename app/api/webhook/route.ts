@@ -15,7 +15,7 @@ export async function POST(req: Request) {
     event = stripe.webhooks.constructEvent(
       body,
       signature,
-      process.env.STRIPE_WEBHOOK_KEY!
+      process.env.STRIPE_WEBHOOK_KEY!,
     );
   } catch (e) {
     console.log("Error constructing webhook event:", e);
@@ -36,11 +36,18 @@ export async function POST(req: Request) {
       });
     }
 
-    await db.purchase.create({
-      data: {
+    await db.purchase.upsert({
+      where: {
+        userId_courseId: {
+          userId,
+          courseId,
+        },
+      },
+      create: {
         courseId,
         userId,
       },
+      update: {},
     });
 
     return new NextResponse(null, { status: 200 });

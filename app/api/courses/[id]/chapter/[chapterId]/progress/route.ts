@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 
 export const PATCH = async (
   req: Request,
-  { params }: { params: Promise<{ id: string; chapterId: string }> }
+  { params }: { params: Promise<{ id: string; chapterId: string }> },
 ) => {
   try {
     const { userId } = await auth();
@@ -18,17 +18,21 @@ export const PATCH = async (
 
     const values = await req.json();
 
-    const chapter = await db.chapter.update({
+    const userProgress = await db.userProgress.upsert({
       where: {
-        id: chapterId,
-        courseId: id,
+        chapterId_userId: { chapterId, userId },
       },
-      data: {
+      create: {
+        userId,
+        chapterId,
+        isCompleted: values.isCompleted,
+      },
+      update: {
         isCompleted: values.isCompleted,
       },
     });
 
-    return NextResponse.json(chapter);
+    return NextResponse.json(userProgress);
   } catch (err) {
     console.error("Complete error:", err);
     return new NextResponse("Internal Error", {

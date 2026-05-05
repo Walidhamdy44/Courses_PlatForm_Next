@@ -9,16 +9,18 @@ const layout = async ({
   params,
 }: {
   children: React.ReactNode;
-  params: { courseId: string };
+  params: Promise<{ courseId: string }>;
 }) => {
   const { userId } = auth();
   if (!userId) {
     return redirect("/");
   }
 
+  const { courseId } = await params;
+
   const course = await db.course.findUnique({
     where: {
-      id: params.courseId,
+      id: courseId,
     },
     include: {
       chapter: {
@@ -27,6 +29,13 @@ const layout = async ({
         },
         orderBy: {
           created_at: "asc",
+        },
+        include: {
+          userProgress: {
+            where: {
+              userId,
+            },
+          },
         },
       },
       category: {
@@ -37,6 +46,10 @@ const layout = async ({
       },
     },
   });
+
+  if (!course) {
+    return redirect("/");
+  }
   return (
     <div>
       <div className=" md:pl-80 h-[80px] w-full flex fixed inset-y-0 z-40 bg-white">

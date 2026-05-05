@@ -6,13 +6,13 @@ import { Purchase } from "@prisma/client";
 interface chapterVideo {
   vidUrl: string;
   isFree: Boolean;
-  purchase: Purchase[];
+  purchase: Purchase | null;
 }
 
 const VideoPlayer = ({ vidUrl, isFree, purchase }: chapterVideo) => {
   return (
     <div className="p-6">
-      {purchase.length !== 0 ? (
+      {purchase !== null ? (
         <div className="relative pb-[56.25%] h-0 overflow-hidden rounded-lg shadow-lg bg-gray-900">
           <ReactPlayer
             url={vidUrl}

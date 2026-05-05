@@ -43,7 +43,7 @@ const CoursesDashboard = async () => {
                 isPublished: true,
               },
             },
-            purchase: true,
+            purchase: { where: { userId } },
           },
         },
       },

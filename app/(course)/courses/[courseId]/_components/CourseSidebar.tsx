@@ -4,7 +4,7 @@ import CourseSideBarItem from "./CourseSideBarItem";
 const CourseSidebar = ({ course }: any) => {
   const totalChapters = course!.chapter.length;
   const completedChapters = course!.chapter.filter(
-    (chapter: any) => chapter.isCompleted
+    (chapter: any) => chapter.userProgress?.[0]?.isCompleted,
   ).length;
 
   const chapComp = (completedChapters / totalChapters) * 100;
@@ -22,8 +22,14 @@ const CourseSidebar = ({ course }: any) => {
       <div className="w-full">
         {course!.chapter.length > 0 &&
           course!.chapter.map((cha: any) => {
+            const isCompleted = cha.userProgress?.[0]?.isCompleted ?? false;
             return (
-              <CourseSideBarItem key={cha.id} cha={cha} courseId={course.id} />
+              <CourseSideBarItem
+                key={cha.id}
+                cha={cha}
+                courseId={course.id}
+                isCompleted={isCompleted}
+              />
             );
           })}
       </div>

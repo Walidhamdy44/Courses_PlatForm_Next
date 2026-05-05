@@ -2,7 +2,12 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ["utfs.io", "images.unsplash.com", "img.clerk.com"], // Add the domain here
+    domains: [
+      "utfs.io",
+      "images.unsplash.com",
+      "img.clerk.com",
+      "placehold.co",
+    ], // Add the domain here
   },
 };
 

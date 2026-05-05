@@ -12,7 +12,7 @@ interface CompleteChapterProps {
   title: string;
   desc: string;
   complete: boolean;
-  purchase: Purchase[];
+  purchase: Purchase | null;
   attachments: Attachment[];
   price: number;
   courseId: string;
@@ -39,7 +39,7 @@ const ChapterCompleteSec = ({
         `/api/courses/${courseId}/chapter/${chapterId}/progress`,
         {
           isCompleted: !complete,
-        }
+        },
       );
       toast.success(" Update Progress successfully!");
       router.refresh();
@@ -50,16 +50,11 @@ const ChapterCompleteSec = ({
 
   return (
     <div className="mt-4">
-      {purchase.length === 0 ? (
+      {purchase === null ? (
         <>
           <div className="flex items-center justify-between gap-4 p-6 shadow-md flex-col md:flex-row">
             <p className="text-gray-500 font-semibold text-[20px]">{title}</p>
-            <BuyCourse
-              price={price}
-              courseId={courseId}
-              purchase={purchase}
-              userId={userId}
-            />
+            <BuyCourse price={price} courseId={courseId} purchase={purchase} />
           </div>
           <div className="p-4 flex items-start flex-col gap-4 shadow-inner mt-4">
             <p className="text-[22px] text-teal-600 font-semibold">
