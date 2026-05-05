@@ -1,25 +1,25 @@
 "use client";
+
 import qs from "query-string";
-import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { IconType } from "react-icons/lib";
+import { LucideIcon } from "lucide-react";
 
-interface categoryItem {
-  icon?: IconType;
-  lable: string;
+interface CategoryItemProps {
+  icon?: LucideIcon;
+  label: string;
   value?: string;
 }
 
-const CategoryItem = ({ lable, icon: Icon, value }: categoryItem) => {
+const CategoryItem = ({ label, icon: Icon, value }: CategoryItemProps) => {
   const router = useRouter();
   const pathName = usePathname();
   const searchParams = useSearchParams();
 
-  const curentCategryId = searchParams.get("categoryId");
-  const curentTitle = searchParams.get("title");
+  const currentCategoryId = searchParams.get("categoryId");
+  const currentTitle = searchParams.get("title");
 
-  const isSelected = curentCategryId === value;
+  const isSelected = currentCategoryId === value;
 
   const onClick = () => {
     const url = qs.stringifyUrl(
@@ -27,30 +27,34 @@ const CategoryItem = ({ lable, icon: Icon, value }: categoryItem) => {
         url: pathName,
         query: {
           categoryId: isSelected ? null : value,
-          title: curentTitle,
+          title: currentTitle,
         },
       },
       {
         skipEmptyString: true,
         skipNull: true,
-      }
+      },
     );
     router.push(url);
   };
 
   return (
-    <div className="pb-[20px]">
-      <Button
-        onClick={onClick}
-        className={cn(
-          "flex items-center gap-3 bg-green-200 text-black hover:text-white hover:bg-green-400",
-          isSelected && "bg-green-600 text-white"
-        )}
-      >
-        {Icon && <Icon size={20} />}
-        <div className="truncate">{lable}</div>
-      </Button>
-    </div>
+    <button
+      onClick={onClick}
+      className={cn(
+        "flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all duration-200 border",
+        isSelected
+          ? "bg-indigo-600 text-white border-indigo-600 shadow-sm"
+          : "bg-white text-gray-600 border-gray-200 hover:bg-gray-50 hover:border-gray-300",
+      )}
+    >
+      {Icon && (
+        <Icon
+          className={cn("w-4 h-4", isSelected ? "text-white" : "text-gray-400")}
+        />
+      )}
+      {label}
+    </button>
   );
 };
 

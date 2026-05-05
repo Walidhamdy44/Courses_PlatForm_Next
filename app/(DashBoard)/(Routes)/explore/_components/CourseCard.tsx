@@ -1,81 +1,68 @@
-import { Badge } from "@/components/ui/badge";
 import { Course } from "@prisma/client";
 import Image from "next/image";
 import Link from "next/link";
-import { FcBookmark } from "react-icons/fc";
+import { BookOpen, Tag } from "lucide-react";
 
-interface card {
+interface CourseCardProps {
   course: Course;
   nChapters: number;
-  cat: string | "";
+  cat: string;
 }
 
-const CourseCard = ({ course, nChapters, cat }: card) => {
+const CourseCard = ({ course, nChapters, cat }: CourseCardProps) => {
   return (
     <Link
       href={`/courses/${course.id}`}
-      className="block rounded-lg p-4 shadow-sm shadow-indigo-100 transition-transform transform hover:scale-105 hover:shadow-lg hover:shadow-indigo-300"
+      className="group block bg-white rounded-xl border border-gray-100 overflow-hidden shadow-sm hover:shadow-md hover:border-gray-200 transition-all duration-300"
     >
-      <div className="relative aspect-video w-full transition-opacity duration-300 hover:opacity-90">
+      {/* Image */}
+      <div className="relative aspect-video w-full overflow-hidden bg-gray-100">
         <Image
           alt={course.title}
-          src={course.imgUrl || ""}
+          src={course.imgUrl || "https://placehold.co/600x400"}
           fill
-          className="rounded-md object-cover"
+          className="object-cover group-hover:scale-105 transition-transform duration-500"
         />
       </div>
 
-      <div className="mt-2">
-        <dl>
-          <div>
-            <dt className="sr-only">Price</dt>
+      {/* Content */}
+      <div className="p-4 space-y-3">
+        {/* Category */}
+        {cat && (
+          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-50 text-indigo-700">
+            <Tag className="w-3 h-3" />
+            {cat}
+          </span>
+        )}
 
-            <dd className="text-sm text-gray-500">
-              <Badge>${course.price}</Badge>
-            </dd>
-          </div>
+        {/* Title */}
+        <h3 className="font-semibold text-gray-900 line-clamp-2 group-hover:text-indigo-600 transition-colors">
+          {course.title}
+        </h3>
 
-          <div className="mt-2">
-            <dt className="sr-only">Title</dt>
+        {/* Description */}
+        {course.description && (
+          <p className="text-sm text-gray-500 line-clamp-2">
+            {course.description}
+          </p>
+        )}
 
-            <dd className="font-medium">{course.title}</dd>
-          </div>
-        </dl>
+        {/* Footer */}
+        <div className="flex items-center justify-between pt-2 border-t border-gray-50">
+          <span className="flex items-center gap-1.5 text-xs text-gray-500">
+            <BookOpen className="w-3.5 h-3.5" />
+            {nChapters} {nChapters === 1 ? "chapter" : "chapters"}
+          </span>
 
-        <div className="mt-6 flex items-center gap-4 text-xs justify-between">
-          <div className="sm:inline-flex sm:shrink-0 sm:items-center sm:gap-2">
-            <svg
-              className="size-4 text-indigo-700"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z"
-              />
-            </svg>
-
-            <div className="mt-1.5 sm:mt-0">
-              <p className="text-gray-500">Chapters</p>
-
-              <p className="font-medium">
-                {nChapters}
-                {"  "}
-                {+nChapters > 1 ? "chapters" : "chapter"}
-              </p>
-            </div>
-          </div>
-          <div className="flex items-center gap-2">
-            <FcBookmark className="w-4 h-4" />
-
-            <div className="">
-              <p className="font-medium">{cat}</p>
-            </div>
-          </div>
+          {course.price ? (
+            <span className="text-sm font-bold text-emerald-600">
+              ${course.price.toFixed(2)}
+            </span>
+          ) : (
+            <span className="text-xs font-semibold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">
+              Free
+            </span>
+          )}
         </div>
       </div>
     </Link>

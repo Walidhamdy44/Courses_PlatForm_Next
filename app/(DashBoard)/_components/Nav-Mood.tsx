@@ -1,27 +1,30 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { ExternalLinkIcon } from "lucide-react";
+import { GraduationCap, LogOut } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const NavMood = () => {
   const pathName = usePathname();
-  const teacer = pathName.includes("/teacher");
+  const isTeacher = pathName.includes("/teacher");
+
   return (
     <div>
-      {teacer ? (
-        <Link href="/dashboard">
-          <Button variant="ghost" size="sm" className="flex items-center gap-3">
-            Exit
-            <ExternalLinkIcon />
-          </Button>
+      {isTeacher ? (
+        <Link
+          href="/dashboard"
+          className="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-100 transition"
+        >
+          <LogOut className="w-4 h-4" />
+          <span className="hidden sm:inline">Exit Teacher</span>
         </Link>
       ) : (
-        <Link href="/teacher/courses">
-          <Button variant="ghost" size="sm">
-            Teacher Mood
-          </Button>
+        <Link
+          href="/teacher/courses"
+          className="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-100 transition"
+        >
+          <GraduationCap className="w-4 h-4" />
+          <span className="hidden sm:inline">Teacher Mode</span>
         </Link>
       )}
     </div>
