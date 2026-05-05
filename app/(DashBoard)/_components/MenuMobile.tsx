@@ -8,7 +8,7 @@ const MenuMobile = () => {
       <SheetTrigger className=" hover:text-green-500 transition text-[18px]">
         <Menu />
       </SheetTrigger>
-      <SheetContent side="left">
+      <SheetContent side="left" className="p-0 w-64">
         <Sidebar />
       </SheetContent>
     </Sheet>

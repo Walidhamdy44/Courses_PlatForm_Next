@@ -1,91 +1,96 @@
 "use client";
-import Image from "next/image";
+
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
+import {
+  LayoutDashboard,
+  Compass,
+  BookOpen,
+  BarChart3,
+  GraduationCap,
+  ChevronRight,
+} from "lucide-react";
 
 const SideLinks = () => {
   const pathname = usePathname();
-  const isDash = pathname.includes("/dashboard");
-  const isExplore = pathname.includes("/explore");
   const isTeacher = pathname.includes("/teacher");
-  const isAnaltics = pathname.includes("/teacher/analtics");
-  const isCourses = pathname.includes("/teacher/courses");
+
+  const studentLinks = [
+    {
+      href: "/dashboard",
+      label: "Dashboard",
+      icon: LayoutDashboard,
+      active: pathname === "/dashboard",
+    },
+    {
+      href: "/explore",
+      label: "Explore Courses",
+      icon: Compass,
+      active: pathname.includes("/explore"),
+    },
+  ];
+
+  const teacherLinks = [
+    {
+      href: "/teacher/courses",
+      label: "My Courses",
+      icon: BookOpen,
+      active: pathname.includes("/teacher/courses"),
+    },
+    {
+      href: "/teacher/analtics",
+      label: "Analytics",
+      icon: BarChart3,
+      active: pathname.includes("/teacher/analtics"),
+    },
+  ];
+
+  const links = isTeacher ? teacherLinks : studentLinks;
 
   return (
-    <>
-      {isTeacher ? (
-        <ul className="flex flex-col  w-full px-3 gap-[15px] text-center mt-[10px]">
-          <li
+    <div className="space-y-1.5">
+      {/* Section Label */}
+      <p className="px-3 mb-3 text-[11px] font-semibold uppercase tracking-wider text-slate-400">
+        {isTeacher ? "Teacher Mode" : "Menu"}
+      </p>
+
+      {links.map((link) => (
+        <Link
+          key={link.href}
+          href={link.href}
+          className={cn(
+            "group flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200",
+            link.active
+              ? "bg-white/10 text-white shadow-sm"
+              : "text-slate-300 hover:bg-white/5 hover:text-white",
+          )}
+        >
+          <link.icon
             className={cn(
-              "relative w-full py-[10px] px-[10px] text-[20px] rounded-md cursor-pointer hover:bg-[rgba(46,229,110,0.256)] transition-all",
-              isCourses ? "active" : ""
+              "w-5 h-5 flex-shrink-0 transition-colors",
+              link.active
+                ? "text-emerald-400"
+                : "text-slate-400 group-hover:text-slate-200",
             )}
-          >
-            <Link href="/teacher/courses" className="flex items-center gap-4">
-              <Image
-                src="/imgs/dashboard-1-svgrepo-com.svg"
-                width={30}
-                height={30}
-                alt="dashboard"
-              />
-              <span>Courses</span>
-            </Link>
-          </li>
-          <li
-            className={cn(
-              "relative w-full py-[10px]  px-[10px] text-[20px] rounded-md cursor-pointer hover:bg-[rgba(46,229,110,0.256)] transition-all",
-              isAnaltics ? "active" : ""
-            )}
-          >
-            <Link href="/teacher/analtics" className="flex items-center gap-4">
-              <Image
-                src="/imgs/browser-search-svgrepo-com.svg"
-                width={30}
-                height={30}
-                alt="dashboard"
-              />
-              <span>Analtics</span>
-            </Link>
-          </li>
-        </ul>
-      ) : (
-        <ul className="flex flex-col  w-full px-3 gap-[15px] text-center  mt-[20px]">
-          <li
-            className={cn(
-              "relative w-full py-[10px] px-[10px] text-[20px] rounded-md cursor-pointer hover:bg-[rgba(46,229,110,0.256)] transition-all",
-              isDash ? "active" : ""
-            )}
-          >
-            <Link href="/dashboard" className="flex items-center gap-4">
-              <Image
-                src="/imgs/dashboard-1-svgrepo-com.svg"
-                width={30}
-                height={30}
-                alt="dashboard"
-              />
-              <span>Dashboard</span>
-            </Link>
-          </li>
-          <li
-            className={cn(
-              "relative w-full py-[10px]  px-[10px] text-[20px] rounded-md cursor-pointer hover:bg-[rgba(46,229,110,0.256)] transition-all",
-              isExplore ? "active" : ""
-            )}
-          >
-            <Link href="/explore" className="flex items-center gap-4">
-              <Image
-                src="/imgs/browser-search-svgrepo-com.svg"
-                width={30}
-                height={30}
-                alt="dashboard"
-              />
-              <span>Explore</span>
-            </Link>
-          </li>
-        </ul>
-      )}
-    </>
+          />
+          <span className="flex-1">{link.label}</span>
+          {link.active && <ChevronRight className="w-4 h-4 text-emerald-400" />}
+        </Link>
+      ))}
+
+      {/* Divider */}
+      <div className="my-4 border-t border-white/10" />
+
+      {/* Mode Switch */}
+      <Link
+        href={isTeacher ? "/dashboard" : "/teacher/courses"}
+        className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-300 hover:bg-white/5 hover:text-white transition-all duration-200"
+      >
+        <GraduationCap className="w-5 h-5 text-slate-400" />
+        <span>{isTeacher ? "Student Mode" : "Teacher Mode"}</span>
+      </Link>
+    </div>
   );
 };
 
