@@ -2,11 +2,16 @@
 
 import { Button } from "@/components/ui/button";
 import { Attachment, Purchase } from "@prisma/client";
-import { CheckCircle, Download } from "lucide-react";
+import {
+  CheckCircle2,
+  Download,
+  FileText,
+  CircleDollarSign,
+} from "lucide-react";
 import toast from "react-hot-toast";
-import BuyCourse from "./BuyCourse";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 interface CompleteChapterProps {
   title: string;
@@ -32,86 +37,154 @@ const ChapterCompleteSec = ({
   chapterId,
 }: CompleteChapterProps) => {
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+  const [isBuying, setIsBuying] = useState(false);
 
   const CompleteChapter = async () => {
     try {
+      setIsLoading(true);
       await axios.patch(
         `/api/courses/${courseId}/chapter/${chapterId}/progress`,
         {
           isCompleted: !complete,
-        },
+        }
       );
-      toast.success(" Update Progress successfully!");
+      toast.success("Progress updated!");
       router.refresh();
     } catch (error) {
       toast.error("Something went wrong!");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleBuy = async () => {
+    try {
+      setIsBuying(true);
+      const res = await axios.post(`/api/courses/${courseId}/checkout`, {
+        title: "Course Purchase",
+      });
+      window.location.assign(res.data.url);
+    } catch (e) {
+      toast.error("Something went wrong!");
+    } finally {
+      setIsBuying(false);
     }
   };
 
   return (
-    <div className="mt-4">
+    <div className="space-y-6">
       {purchase === null ? (
         <>
-          <div className="flex items-center justify-between gap-4 p-6 shadow-md flex-col md:flex-row">
-            <p className="text-gray-500 font-semibold text-[20px]">{title}</p>
-            <BuyCourse price={price} courseId={courseId} purchase={purchase} />
+          {/* Locked State */}
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-5 bg-white rounded-2xl border border-gray-100 shadow-sm">
+            <div>
+              <h2 className="text-xl font-semibold text-gray-900">{title}</h2>
+              <p className="text-sm text-gray-500 mt-1">
+                Purchase this course to access all content
+              </p>
+            </div>
+            <Button
+              onClick={handleBuy}
+              disabled={isBuying}
+              className="bg-[#2F288B] hover:bg-[#3E399A] text-white rounded-xl px-6 py-2.5 flex items-center gap-2 shadow-md"
+            >
+              <CircleDollarSign className="w-4 h-4" />
+              Enroll for ${price}
+            </Button>
           </div>
-          <div className="p-4 flex items-start flex-col gap-4 shadow-inner mt-4">
-            <p className="text-[22px] text-teal-600 font-semibold">
-              Description
-            </p>
-            <p className=" text-gray-400">{desc}</p>
-          </div>
-          <div className="p-4 flex items-start flex-col gap-4 shadow-inner mt-4">
-            <p className="text-[22px] text-teal-600 font-semibold">
-              Attachments
-            </p>
-            <p className=" text-gray-400">To Get Attachments You Have to Pay</p>
-          </div>
+
+          {/* Description */}
+          {desc && (
+            <div className="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm">
+              <h3 className="text-sm font-semibold text-gray-900 mb-2 uppercase tracking-wider">
+                Description
+              </h3>
+              <p className="text-gray-600 text-sm leading-relaxed whitespace-pre-line">
+                {desc}
+              </p>
+            </div>
+          )}
+
+          {/* Attachments locked */}
+          {attachments.length > 0 && (
+            <div className="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm">
+              <h3 className="text-sm font-semibold text-gray-900 mb-2 uppercase tracking-wider">
+                Attachments
+              </h3>
+              <p className="text-sm text-gray-400">
+                Purchase the course to access attachments
+              </p>
+            </div>
+          )}
         </>
       ) : (
         <>
-          <div className="flex items-end justify-between gap-4 p-6">
-            <p className="text-gray-500 font-semibold">{title}</p>
+          {/* Purchased State */}
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-5 bg-white rounded-2xl border border-gray-100 shadow-sm">
+            <div>
+              <h2 className="text-xl font-semibold text-gray-900">{title}</h2>
+            </div>
             <Button
-              className="flex items-center gap-3"
               onClick={CompleteChapter}
+              disabled={isLoading}
+              className={`rounded-xl px-5 py-2.5 flex items-center gap-2 transition-all ${
+                complete
+                  ? "bg-emerald-500 hover:bg-emerald-600 text-white"
+                  : "bg-[#2F288B] hover:bg-[#3E399A] text-white"
+              }`}
             >
-              <CheckCircle className="h-4 w-4" />{" "}
-              {!complete ? `Mark as Completed` : "UnCompleted"}
+              <CheckCircle2 className="w-4 h-4" />
+              {complete ? "Completed" : "Mark as Complete"}
             </Button>
           </div>
-          <div className="p-4 text-gray-400 flex items-center justify-center">
-            {desc}
-          </div>
-          <div className="p-4 flex items-start flex-col gap-4 shadow-inner mt-4">
-            <p className="text-[22px] text-teal-600 font-semibold">
-              Attachments
-            </p>
-            <ul className="list-disc pl-5 space-y-3 w-full">
-              {attachments.map((attachment) => (
-                <li
-                  key={attachment.id}
-                  className="flex items-center justify-between gap-2 p-2 bg-gray-100 rounded-md shadow-sm"
-                >
-                  <span className="text-gray-700 font-medium">
-                    {attachment.name}
-                  </span>
-                  <a
-                    href={attachment.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-500 hover:text-blue-700 flex items-center gap-4"
+
+          {/* Description */}
+          {desc && (
+            <div className="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm">
+              <h3 className="text-sm font-semibold text-gray-900 mb-2 uppercase tracking-wider">
+                Description
+              </h3>
+              <p className="text-gray-600 text-sm leading-relaxed whitespace-pre-line">
+                {desc}
+              </p>
+            </div>
+          )}
+
+          {/* Attachments */}
+          {attachments.length > 0 && (
+            <div className="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm">
+              <h3 className="text-sm font-semibold text-gray-900 mb-3 uppercase tracking-wider">
+                Attachments
+              </h3>
+              <div className="space-y-2">
+                {attachments.map((attachment) => (
+                  <div
+                    key={attachment.id}
+                    className="flex items-center justify-between gap-3 p-3 bg-[#f9f9f9] rounded-xl hover:bg-[#f3f3f3] transition-colors"
                   >
-                    <Button className=" flex items-center gap-4">
-                      <Download className="h-4 w-4" />
+                    <div className="flex items-center gap-3 min-w-0">
+                      <div className="w-9 h-9 rounded-lg bg-[#E3DFFF] flex items-center justify-center flex-shrink-0">
+                        <FileText className="w-4 h-4 text-[#2F288B]" />
+                      </div>
+                      <span className="text-sm font-medium text-gray-700 truncate">
+                        {attachment.name}
+                      </span>
+                    </div>
+                    <a
+                      href={attachment.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-1.5 text-xs font-medium text-[#2F288B] hover:underline flex-shrink-0"
+                    >
+                      <Download className="w-3.5 h-3.5" />
                       Download
-                    </Button>
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
+                    </a>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </>
       )}
     </div>

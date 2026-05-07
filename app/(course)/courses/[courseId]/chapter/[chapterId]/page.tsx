@@ -1,9 +1,9 @@
-import Banner from "@/components/Banner";
 import { db } from "@/lib/db";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import VideoPlayer from "../../_components/VideoPlayer";
 import ChapterCompleteSec from "../../_components/ChapterCompleteSec";
+import { AlertTriangle } from "lucide-react";
 
 interface ChapterPageProps {
   params: Promise<{
@@ -52,29 +52,41 @@ const ChapterPage = async ({ params }: ChapterPageProps) => {
     },
   });
 
+  if (!chapter || !course) {
+    return redirect("/");
+  }
+
   return (
-    <div>
-      {purchase === null ? (
-        <Banner message="⚠️      This Chapter is Locked!" />
-      ) : null}
-      <div className="flex flex-col gap-3 py-[30px]">
-        <VideoPlayer
-          vidUrl={chapter?.videoUrl!}
-          isFree={chapter?.ifFree!}
-          purchase={purchase}
-        />
-        <ChapterCompleteSec
-          title={chapter?.chapterTitle!}
-          desc={chapter?.description!}
-          complete={userProgress?.isCompleted ?? false}
-          purchase={purchase}
-          attachments={attachments}
-          price={course?.price!}
-          courseId={course?.id!}
-          userId={userId!}
-          chapterId={chapter?.id!}
-        />
-      </div>
+    <div className="p-4 md:p-6 lg:p-8 max-w-5xl mx-auto space-y-6">
+      {/* Locked Banner */}
+      {!purchase && !chapter.ifFree && (
+        <div className="flex items-center gap-3 p-4 bg-amber-50 border border-amber-200 rounded-xl">
+          <AlertTriangle className="w-5 h-5 text-amber-600 flex-shrink-0" />
+          <p className="text-sm text-amber-800 font-medium">
+            This chapter is locked. Purchase the course to unlock all content.
+          </p>
+        </div>
+      )}
+
+      {/* Video Player */}
+      <VideoPlayer
+        vidUrl={chapter.videoUrl!}
+        isFree={chapter.ifFree!}
+        purchase={purchase}
+      />
+
+      {/* Chapter Content */}
+      <ChapterCompleteSec
+        title={chapter.chapterTitle}
+        desc={chapter.description || ""}
+        complete={userProgress?.isCompleted ?? false}
+        purchase={purchase}
+        attachments={attachments}
+        price={course.price!}
+        courseId={course.id}
+        userId={userId}
+        chapterId={chapter.id}
+      />
     </div>
   );
 };

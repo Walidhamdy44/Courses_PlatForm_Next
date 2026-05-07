@@ -28,7 +28,7 @@ const layout = async ({
           isPublished: true,
         },
         orderBy: {
-          created_at: "asc",
+          position: "asc",
         },
         include: {
           userProgress: {
@@ -51,14 +51,22 @@ const layout = async ({
     return redirect("/");
   }
   return (
-    <div>
-      <div className=" md:pl-80 h-[80px] w-full flex fixed inset-y-0 z-40 bg-white">
+    <div className="h-screen flex flex-col bg-[#f9f9f9]">
+      {/* Top Navbar */}
+      <div className="h-16 border-b border-gray-100 bg-white flex-shrink-0 z-40">
         <CourseNavBar course={course} />
       </div>
-      <div className="hidden md:flex w-80 h-full flex-col fixed inset-y-0 z-40">
-        <CourseSidebar course={course} />
+
+      {/* Main Content Area */}
+      <div className="flex flex-1 overflow-hidden">
+        {/* Sidebar */}
+        <div className="hidden lg:flex w-80 flex-shrink-0 border-r border-gray-100 overflow-y-auto bg-white">
+          <CourseSidebar course={course} />
+        </div>
+
+        {/* Content */}
+        <main className="flex-1 overflow-y-auto">{children}</main>
       </div>
-      <main className="md:pl-80 w-full pt-[80px]">{children}</main>
     </div>
   );
 };

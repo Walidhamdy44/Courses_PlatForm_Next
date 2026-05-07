@@ -1,0 +1,242 @@
+export const dynamic = "force-dynamic";
+
+import { db } from "@/lib/db";
+import { auth } from "@clerk/nextjs/server";
+import { redirect } from "next/navigation";
+import Image from "next/image";
+import {
+  BookOpen,
+  Clock,
+  Users,
+  Star,
+  CheckCircle2,
+  PlayCircle,
+  Lock,
+  ArrowLeft,
+} from "lucide-react";
+import Link from "next/link";
+import EnrollButton from "./_components/EnrollButton";
+
+const CourseDetailsPage = async ({
+  params,
+}: {
+  params: Promise<{ courseId: string }>;
+}) => {
+  const { courseId } = await params;
+  const { userId } = auth();
+
+  const course = await db.course.findUnique({
+    where: {
+      id: courseId,
+      isPublished: true,
+    },
+    include: {
+      chapter: {
+        where: {
+          isPublished: true,
+        },
+        orderBy: {
+          position: "asc",
+        },
+      },
+      category: true,
+      purchase: userId
+        ? {
+            where: {
+              userId,
+            },
+          }
+        : false,
+    },
+  });
+
+  if (!course) {
+    return redirect("/explore");
+  }
+
+  const purchase = userId && course.purchase?.length > 0 ? course.purchase[0] : null;
+
+  return (
+    <div className="min-h-screen bg-[#f9f9f9]">
+      {/* Back Navigation */}
+      <div className="max-w-7xl mx-auto px-6 pt-6">
+        <Link
+          href="/explore"
+          className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-[#2F288B] transition-colors"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          Back to Courses
+        </Link>
+      </div>
+
+      {/* Hero Section */}
+      <div className="max-w-7xl mx-auto px-6 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Left Content */}
+          <div className="lg:col-span-2 space-y-6">
+            {/* Course Image */}
+            <div className="relative aspect-video w-full rounded-2xl overflow-hidden shadow-lg">
+              <Image
+                src={course.imgUrl || "https://placehold.co/800x450"}
+                alt={course.title}
+                fill
+                className="object-cover"
+                priority
+              />
+              {/* Overlay gradient */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
+            </div>
+
+            {/* Course Info */}
+            <div className="space-y-4">
+              {/* Category Badge */}
+              {course.category && (
+                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-[#E3DFFF] text-[#2F288B]">
+                  {course.category.name}
+                </span>
+              )}
+
+              {/* Title */}
+              <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 leading-tight">
+                {course.title}
+              </h1>
+
+              {/* Meta Info */}
+              <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500">
+                <span className="flex items-center gap-1.5">
+                  <BookOpen className="w-4 h-4 text-[#2F288B]" />
+                  {course.chapter.length}{" "}
+                  {course.chapter.length === 1 ? "Chapter" : "Chapters"}
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <Clock className="w-4 h-4 text-[#2F288B]" />
+                  Self-paced
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <Users className="w-4 h-4 text-[#2F288B]" />
+                  All Levels
+                </span>
+              </div>
+            </div>
+
+            {/* Description Section */}
+            <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+              <h2 className="text-xl font-semibold text-gray-900 mb-3">
+                About This Course
+              </h2>
+              <p className="text-gray-600 leading-relaxed whitespace-pre-line">
+                {course.description || "No description available for this course."}
+              </p>
+            </div>
+
+            {/* What You'll Learn */}
+            <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+              <h2 className="text-xl font-semibold text-gray-900 mb-4">
+                What You&apos;ll Learn
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                {course.chapter.slice(0, 6).map((ch) => (
+                  <div key={ch.id} className="flex items-start gap-2">
+                    <CheckCircle2 className="w-5 h-5 text-[#2F288B] mt-0.5 flex-shrink-0" />
+                    <span className="text-sm text-gray-600">
+                      {ch.chapterTitle}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Course Curriculum */}
+            <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+              <h2 className="text-xl font-semibold text-gray-900 mb-4">
+                Course Curriculum
+              </h2>
+              <div className="space-y-2">
+                {course.chapter.map((chapter, index) => (
+                  <div
+                    key={chapter.id}
+                    className="flex items-center gap-3 p-3 rounded-xl hover:bg-[#f3f3f3] transition-colors"
+                  >
+                    <div className="flex items-center justify-center w-8 h-8 rounded-full bg-[#E3DFFF] text-[#2F288B] text-sm font-semibold flex-shrink-0">
+                      {index + 1}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium text-gray-900 truncate">
+                        {chapter.chapterTitle}
+                      </p>
+                    </div>
+                    {chapter.ifFree || purchase ? (
+                      <PlayCircle className="w-5 h-5 text-[#2F288B] flex-shrink-0" />
+                    ) : (
+                      <Lock className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Right Sidebar - Purchase Card */}
+          <div className="lg:col-span-1">
+            <div className="sticky top-24 bg-white rounded-2xl p-6 shadow-md border border-gray-100 space-y-5">
+              {/* Price */}
+              <div className="text-center">
+                {course.price ? (
+                  <div className="space-y-1">
+                    <p className="text-4xl font-bold text-gray-900">
+                      ${course.price.toFixed(2)}
+                    </p>
+                    <p className="text-sm text-gray-500">One-time payment</p>
+                  </div>
+                ) : (
+                  <div className="space-y-1">
+                    <p className="text-4xl font-bold text-[#2F288B]">Free</p>
+                    <p className="text-sm text-gray-500">Full access</p>
+                  </div>
+                )}
+              </div>
+
+              {/* Divider */}
+              <div className="border-t border-gray-100" />
+
+              {/* Enroll Button */}
+              <EnrollButton
+                courseId={course.id}
+                price={course.price || 0}
+                isPurchased={!!purchase}
+                firstChapterId={course.chapter[0]?.id}
+              />
+
+              {/* Course Includes */}
+              <div className="space-y-3 pt-2">
+                <p className="text-sm font-semibold text-gray-900">
+                  This course includes:
+                </p>
+                <div className="space-y-2.5">
+                  <div className="flex items-center gap-2 text-sm text-gray-600">
+                    <PlayCircle className="w-4 h-4 text-[#2F288B]" />
+                    <span>{course.chapter.length} video lessons</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-gray-600">
+                    <Clock className="w-4 h-4 text-[#2F288B]" />
+                    <span>Lifetime access</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-gray-600">
+                    <CheckCircle2 className="w-4 h-4 text-[#2F288B]" />
+                    <span>Certificate of completion</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-gray-600">
+                    <Star className="w-4 h-4 text-[#2F288B]" />
+                    <span>Progress tracking</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default CourseDetailsPage;

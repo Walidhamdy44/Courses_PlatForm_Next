@@ -12,7 +12,7 @@ interface CourseCardProps {
 const CourseCard = ({ course, nChapters, cat }: CourseCardProps) => {
   return (
     <Link
-      href={`/courses/${course.id}`}
+      href={`/course-details/${course.id}`}
       className="group block bg-white rounded-xl border border-gray-100 overflow-hidden shadow-sm hover:shadow-md hover:border-gray-200 transition-all duration-300"
     >
       {/* Image */}
