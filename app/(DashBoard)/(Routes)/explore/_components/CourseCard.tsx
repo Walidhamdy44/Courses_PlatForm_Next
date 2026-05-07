@@ -3,13 +3,28 @@ import Image from "next/image";
 import Link from "next/link";
 import { BookOpen, Tag } from "lucide-react";
 
+interface Creator {
+  clerkId: string;
+  displayName: string | null;
+  firstName: string | null;
+  lastName: string | null;
+  profileImage: string | null;
+  headline: string | null;
+}
+
 interface CourseCardProps {
-  course: Course;
+  course: Course & { creator?: Creator | null };
   nChapters: number;
   cat: string;
 }
 
 const CourseCard = ({ course, nChapters, cat }: CourseCardProps) => {
+  const creator = (course as any).creator as Creator | null;
+  const creatorName =
+    creator?.displayName ||
+    `${creator?.firstName || ""} ${creator?.lastName || ""}`.trim() ||
+    "Instructor";
+
   return (
     <Link
       href={`/course-details/${course.id}`}
@@ -40,12 +55,27 @@ const CourseCard = ({ course, nChapters, cat }: CourseCardProps) => {
           {course.title}
         </h3>
 
-        {/* Description */}
-        {course.description && (
-          <p className="text-sm text-gray-500 line-clamp-2">
-            {course.description}
-          </p>
-        )}
+        {/* Creator */}
+        <div className="flex items-center gap-2">
+          <div className="w-6 h-6 rounded-full overflow-hidden bg-gray-200 flex-shrink-0">
+            {creator?.profileImage ? (
+              <Image
+                src={creator.profileImage}
+                alt={creatorName}
+                width={24}
+                height={24}
+                className="object-cover w-full h-full"
+              />
+            ) : (
+              <div className="w-full h-full bg-[#E3DFFF] flex items-center justify-center">
+                <span className="text-[10px] font-bold text-[#2F288B]">
+                  {creatorName.charAt(0).toUpperCase()}
+                </span>
+              </div>
+            )}
+          </div>
+          <span className="text-xs text-gray-500 truncate">{creatorName}</span>
+        </div>
 
         {/* Footer */}
         <div className="flex items-center justify-between pt-2 border-t border-gray-50">

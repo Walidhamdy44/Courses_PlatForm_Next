@@ -13,6 +13,7 @@ import {
   PlayCircle,
   Lock,
   ArrowLeft,
+  User,
 } from "lucide-react";
 import Link from "next/link";
 import EnrollButton from "./_components/EnrollButton";
@@ -54,7 +55,34 @@ const CourseDetailsPage = async ({
     return redirect("/explore");
   }
 
-  const purchase = userId && course.purchase?.length > 0 ? course.purchase[0] : null;
+  // Fetch creator profile
+  let creator: any = null;
+  try {
+    creator = await (db as any).userProfile.findUnique({
+      where: { clerkId: course.userId },
+      select: {
+        clerkId: true,
+        displayName: true,
+        firstName: true,
+        lastName: true,
+        profileImage: true,
+        headline: true,
+        bio: true,
+        occupation: true,
+        company: true,
+      },
+    });
+  } catch (e) {
+    // Profile not available
+  }
+
+  const creatorName =
+    creator?.displayName ||
+    `${creator?.firstName || ""} ${creator?.lastName || ""}`.trim() ||
+    "Instructor";
+
+  const purchase =
+    userId && course.purchase?.length > 0 ? course.purchase[0] : null;
 
   return (
     <div className="min-h-screen bg-[#f9f9f9]">
@@ -83,7 +111,6 @@ const CourseDetailsPage = async ({
                 className="object-cover"
                 priority
               />
-              {/* Overlay gradient */}
               <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
             </div>
 
@@ -117,6 +144,39 @@ const CourseDetailsPage = async ({
                   All Levels
                 </span>
               </div>
+
+              {/* Creator inline */}
+              {creator && (
+                <div className="flex items-center gap-3 pt-1">
+                  <div className="w-8 h-8 rounded-full overflow-hidden bg-gray-200 flex-shrink-0">
+                    {creator.profileImage ? (
+                      <Image
+                        src={creator.profileImage}
+                        alt={creatorName}
+                        width={32}
+                        height={32}
+                        className="object-cover w-full h-full"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-[#E3DFFF] flex items-center justify-center">
+                        <span className="text-xs font-bold text-[#2F288B]">
+                          {creatorName.charAt(0).toUpperCase()}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-gray-900">
+                      {creatorName}
+                    </p>
+                    {creator.headline && (
+                      <p className="text-xs text-gray-500">
+                        {creator.headline}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Description Section */}
@@ -125,9 +185,58 @@ const CourseDetailsPage = async ({
                 About This Course
               </h2>
               <p className="text-gray-600 leading-relaxed whitespace-pre-line">
-                {course.description || "No description available for this course."}
+                {course.description ||
+                  "No description available for this course."}
               </p>
             </div>
+
+            {/* Instructor Section */}
+            {creator && (
+              <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+                <h2 className="text-xl font-semibold text-gray-900 mb-4">
+                  Your Instructor
+                </h2>
+                <div className="flex items-start gap-4">
+                  <div className="w-16 h-16 rounded-full overflow-hidden bg-gray-200 flex-shrink-0 border-2 border-[#E3DFFF]">
+                    {creator.profileImage ? (
+                      <Image
+                        src={creator.profileImage}
+                        alt={creatorName}
+                        width={64}
+                        height={64}
+                        className="object-cover w-full h-full"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-[#E3DFFF] flex items-center justify-center">
+                        <User className="w-7 h-7 text-[#2F288B]" />
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="text-lg font-semibold text-gray-900">
+                      {creatorName}
+                    </h3>
+                    {(creator.occupation || creator.company) && (
+                      <p className="text-sm text-[#2F288B] font-medium mt-0.5">
+                        {creator.occupation}
+                        {creator.occupation && creator.company && " at "}
+                        {creator.company}
+                      </p>
+                    )}
+                    {creator.headline && (
+                      <p className="text-sm text-gray-500 mt-1">
+                        {creator.headline}
+                      </p>
+                    )}
+                    {creator.bio && (
+                      <p className="text-sm text-gray-600 mt-3 leading-relaxed line-clamp-4">
+                        {creator.bio}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
 
             {/* What You'll Learn */}
             <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
@@ -206,6 +315,40 @@ const CourseDetailsPage = async ({
                 isPurchased={!!purchase}
                 firstChapterId={course.chapter[0]?.id}
               />
+
+              {/* Instructor mini card */}
+              {creator && (
+                <>
+                  <div className="border-t border-gray-100" />
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full overflow-hidden bg-gray-200 flex-shrink-0">
+                      {creator.profileImage ? (
+                        <Image
+                          src={creator.profileImage}
+                          alt={creatorName}
+                          width={40}
+                          height={40}
+                          className="object-cover w-full h-full"
+                        />
+                      ) : (
+                        <div className="w-full h-full bg-[#E3DFFF] flex items-center justify-center">
+                          <span className="text-sm font-bold text-[#2F288B]">
+                            {creatorName.charAt(0).toUpperCase()}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                    <div className="min-w-0">
+                      <p className="text-sm font-medium text-gray-900 truncate">
+                        {creatorName}
+                      </p>
+                      <p className="text-xs text-gray-500 truncate">
+                        {creator.headline || "Instructor"}
+                      </p>
+                    </div>
+                  </div>
+                </>
+              )}
 
               {/* Course Includes */}
               <div className="space-y-3 pt-2">

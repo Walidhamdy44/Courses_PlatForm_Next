@@ -116,3 +116,47 @@ model StripeCustomer {
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 }
+
+
+model UserProfile {
+  id                    String   @id @default(cuid()) @map("_id")
+  clerkId               String   @unique
+  email                 String
+  firstName             String?
+  lastName              String?
+  displayName           String?
+  profileImage          String?
+  bio                   String?
+  headline              String?
+  phone                 String?
+  dateOfBirth           String?
+  gender                String?
+
+  country               String?
+  city                  String?
+  timezone              String?
+  preferredLanguage     String?  @default("en")
+
+  occupation            String?
+  company               String?
+  educationLevel        String?
+  interests             String[]
+  skills                String[]
+
+  website               String?
+  github                String?
+  linkedin              String?
+  twitter               String?
+
+  learningGoal          String?
+  weeklyHoursAvailable  Int?
+  preferredContentType  String?
+  experienceLevel       String?  @default("Beginner")
+
+  emailNotifications    Boolean  @default(true)
+  marketingEmails       Boolean  @default(false)
+  courseUpdateAlerts     Boolean  @default(true)
+
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+}

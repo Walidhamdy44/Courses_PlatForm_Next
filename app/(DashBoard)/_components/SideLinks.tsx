@@ -10,6 +10,7 @@ import {
   BarChart3,
   GraduationCap,
   ChevronRight,
+  UserCircle,
 } from "lucide-react";
 
 const SideLinks = () => {
@@ -28,6 +29,12 @@ const SideLinks = () => {
       label: "Explore Courses",
       icon: Compass,
       active: pathname.includes("/explore"),
+    },
+    {
+      href: "/profile",
+      label: "My Profile",
+      icon: UserCircle,
+      active: pathname.includes("/profile"),
     },
   ];
 
