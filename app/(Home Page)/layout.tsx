@@ -1,18 +1,3 @@
-import "../globals.css";
-
-import Footer from "@/components/Footer";
-
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
-  return (
-    <html lang="en">
-      <body>
-        {children}
-        <Footer />
-      </body>
-    </html>
-  );
+export default function HomeLayout({ children }: { children: React.ReactNode }) {
+  return <>{children}</>;
 }

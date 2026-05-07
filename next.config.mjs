@@ -7,6 +7,7 @@ const nextConfig = {
       "images.unsplash.com",
       "img.clerk.com",
       "placehold.co",
+      "lh3.googleusercontent.com",
     ], // Add the domain here
   },
 };

@@ -1,29 +1,23 @@
-import DiscoutSec from "./_components-home/DiscoutSec";
-import HomeSection2 from "./_components-home/HomeSection2";
-import LandingPage from "./_components-home/LandingPage";
-import NavBarHome from "./_components-home/NavBarHome";
-import TestimonialsSec from "./_components-home/TestemonilsSec";
+import HomeNavbar from "./_components-home/HomeNavbar";
+import HeroSection from "./_components-home/HeroSection";
+import TrustedLogos from "./_components-home/TrustedLogos";
+import FeaturesSection from "./_components-home/FeaturesSection";
+import TestimonialsSection from "./_components-home/TestimonialsSection";
+import PromoBanner from "./_components-home/PromoBanner";
+import NewsletterSection from "./_components-home/NewsletterSection";
+import HomeFooter from "./_components-home/HomeFooter";
 
-const Home = () => {
+export default function HomePage() {
   return (
-    <div className="flex items-start flex-col w-full h-full">
-      <div className="w-full">
-        <NavBarHome />
-      </div>
-      <div className="w-full">
-        <LandingPage />
-      </div>
-      <div className="w-full">
-        <HomeSection2 />
-      </div>
-      <div className="w-full">
-        <TestimonialsSec />
-      </div>
-      <div className="p-4 m-auto">
-        <DiscoutSec />
-      </div>
-    </div>
+    <main className="bg-[#f9f9f9] min-h-screen text-gray-900">
+      <HomeNavbar />
+      <HeroSection />
+      <FeaturesSection />
+      <TestimonialsSection />
+      <TrustedLogos />
+      <NewsletterSection />
+      <PromoBanner />
+      <HomeFooter />
+    </main>
   );
-};
-
-export default Home;
+}

@@ -81,22 +81,21 @@
 
 /* styles/globals.css or a specific CSS module */
 ::-webkit-scrollbar {
-  width: 12px; /* Width of the scrollbar */
+  width: 8px; /* Width of the scrollbar */
 }
 
 ::-webkit-scrollbar-track {
-  background: #21ec8d; /* Track color */
-  border-radius: 10px; /* Track rounded corners */
+  background: #777777; /* Track color */
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #1fdfbf; /* Scrollbar thumb color */
+  background: #b1fff2; /* Scrollbar thumb color */
   border-radius: 10px; /* Thumb rounded corners */
   transition: 0.5s;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #23df55; /* Thumb color on hover */
+  background: #65fd8d; /* Thumb color on hover */
 }
 
 .cl-internal-1j7ahlv {
