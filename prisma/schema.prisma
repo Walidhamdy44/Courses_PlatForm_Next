@@ -160,3 +160,16 @@ model UserProfile {
   createdAt             DateTime @default(now())
   updatedAt             DateTime @updatedAt
 }
+
+
+model Follow {
+  id          String   @id @default(cuid()) @map("_id")
+  followerId  String   // The user who is following
+  followingId String   // The user being followed (teacher)
+
+  createdAt   DateTime @default(now())
+
+  @@unique([followerId, followingId])
+  @@index([followerId])
+  @@index([followingId])
+}

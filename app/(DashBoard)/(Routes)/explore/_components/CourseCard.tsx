@@ -74,7 +74,9 @@ const CourseCard = ({ course, nChapters, cat }: CourseCardProps) => {
               </div>
             )}
           </div>
-          <span className="text-xs text-gray-500 truncate">{creatorName}</span>
+          <span className="text-xs text-gray-500 truncate hover:text-[#2F288B] transition-colors">
+            {creatorName}
+          </span>
         </div>
 
         {/* Footer */}

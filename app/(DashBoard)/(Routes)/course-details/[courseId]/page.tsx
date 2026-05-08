@@ -196,7 +196,10 @@ const CourseDetailsPage = async ({
                 <h2 className="text-xl font-semibold text-gray-900 mb-4">
                   Your Instructor
                 </h2>
-                <div className="flex items-start gap-4">
+                <Link
+                  href={`/instructor/${course.userId}`}
+                  className="flex items-start gap-4 group"
+                >
                   <div className="w-16 h-16 rounded-full overflow-hidden bg-gray-200 flex-shrink-0 border-2 border-[#E3DFFF]">
                     {creator.profileImage ? (
                       <Image
@@ -213,7 +216,7 @@ const CourseDetailsPage = async ({
                     )}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h3 className="text-lg font-semibold text-gray-900">
+                    <h3 className="text-lg font-semibold text-gray-900 group-hover:text-[#2F288B] transition-colors">
                       {creatorName}
                     </h3>
                     {(creator.occupation || creator.company) && (
@@ -233,8 +236,11 @@ const CourseDetailsPage = async ({
                         {creator.bio}
                       </p>
                     )}
+                    <span className="inline-flex items-center gap-1 mt-3 text-xs font-medium text-[#2F288B] group-hover:underline">
+                      View full profile →
+                    </span>
                   </div>
-                </div>
+                </Link>
               </div>
             )}
 
@@ -320,7 +326,10 @@ const CourseDetailsPage = async ({
               {creator && (
                 <>
                   <div className="border-t border-gray-100" />
-                  <div className="flex items-center gap-3">
+                  <Link
+                    href={`/instructor/${course.userId}`}
+                    className="flex items-center gap-3 group"
+                  >
                     <div className="w-10 h-10 rounded-full overflow-hidden bg-gray-200 flex-shrink-0">
                       {creator.profileImage ? (
                         <Image
@@ -339,14 +348,14 @@ const CourseDetailsPage = async ({
                       )}
                     </div>
                     <div className="min-w-0">
-                      <p className="text-sm font-medium text-gray-900 truncate">
+                      <p className="text-sm font-medium text-gray-900 truncate group-hover:text-[#2F288B] transition-colors">
                         {creatorName}
                       </p>
                       <p className="text-xs text-gray-500 truncate">
                         {creator.headline || "Instructor"}
                       </p>
                     </div>
-                  </div>
+                  </Link>
                 </>
               )}
 
