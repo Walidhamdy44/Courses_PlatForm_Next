@@ -6,6 +6,15 @@ type CourseType = {
   categoryId?: string;
 };
 
+type Creator = {
+  clerkId: string;
+  displayName: string | null;
+  firstName: string | null;
+  lastName: string | null;
+  profileImage: string | null;
+  headline: string | null;
+};
+
 export const getCourse = async ({ userId, title, categoryId }: CourseType) => {
   try {
     const courses = await db.course.findMany({
@@ -53,14 +62,14 @@ export const getCourse = async ({ userId, title, categoryId }: CourseType) => {
       },
     });
 
-    const creatorMap = new Map(
-      creators.map((c: any) => [c.clerkId, c])
+    const creatorMap = new Map<string, Creator>(
+      creators.map((c: Creator) => [c.clerkId, c])
     );
 
     // Attach creator info to each course
     const coursesWithCreator = courses.map((course) => ({
       ...course,
-      creator: creatorMap.get(course.userId) || null,
+      creator: (creatorMap.get(course.userId) as Creator | undefined) ?? null,
     }));
 
     return coursesWithCreator;
