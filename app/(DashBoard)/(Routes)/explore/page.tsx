@@ -64,7 +64,7 @@ const ExplorePage = async ({ searchParams }: { searchParams: any }) => {
       {/* Course Grid */}
       {courses.length > 0 ? (
         <div className="grid gap-5 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-          {courses.map((course) => (
+          {courses.map((course: any) => (
             <CourseCard
               key={course.id}
               course={course}

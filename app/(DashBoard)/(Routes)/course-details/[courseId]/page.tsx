@@ -76,6 +76,45 @@ const CourseDetailsPage = async ({
     // Profile not available
   }
 
+  // Fetch reviews
+  let reviews: any[] = [];
+  let averageRating = 0;
+  try {
+    reviews = await (db as any).review.findMany({
+      where: { courseId },
+      orderBy: { createdAt: "desc" },
+    });
+    if (reviews.length > 0) {
+      averageRating =
+        Math.round(
+          (reviews.reduce((sum: number, r: any) => sum + r.rating, 0) /
+            reviews.length) *
+            10
+        ) / 10;
+    }
+  } catch (e) {}
+
+  // Fetch reviewer profiles
+  let reviewerProfiles: any[] = [];
+  if (reviews.length > 0) {
+    try {
+      const reviewerIds = [...new Set(reviews.map((r: any) => r.userId))];
+      reviewerProfiles = await (db as any).userProfile.findMany({
+        where: { clerkId: { in: reviewerIds } },
+        select: {
+          clerkId: true,
+          displayName: true,
+          firstName: true,
+          lastName: true,
+          profileImage: true,
+        },
+      });
+    } catch (e) {}
+  }
+  const reviewerMap = new Map(
+    reviewerProfiles.map((p: any) => [p.clerkId, p])
+  );
+
   const creatorName =
     creator?.displayName ||
     `${creator?.firstName || ""} ${creator?.lastName || ""}`.trim() ||
@@ -130,6 +169,15 @@ const CourseDetailsPage = async ({
 
               {/* Meta Info */}
               <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500">
+                {averageRating > 0 && (
+                  <span className="flex items-center gap-1.5">
+                    <Star className="w-4 h-4 text-amber-400 fill-amber-400" />
+                    <span className="font-semibold text-gray-700">
+                      {averageRating.toFixed(1)}
+                    </span>
+                    <span>({reviews.length} {reviews.length === 1 ? "review" : "reviews"})</span>
+                  </span>
+                )}
                 <span className="flex items-center gap-1.5">
                   <BookOpen className="w-4 h-4 text-[#2F288B]" />
                   {course.chapter.length}{" "}
@@ -289,6 +337,119 @@ const CourseDetailsPage = async ({
                 ))}
               </div>
             </div>
+
+            {/* Reviews Section */}
+            {reviews.length > 0 && (
+              <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+                <div className="flex items-center justify-between mb-5">
+                  <h2 className="text-xl font-semibold text-gray-900">
+                    Student Reviews
+                  </h2>
+                  <div className="flex items-center gap-2">
+                    <Star className="w-5 h-5 text-amber-400 fill-amber-400" />
+                    <span className="text-lg font-bold text-gray-900">
+                      {averageRating.toFixed(1)}
+                    </span>
+                    <span className="text-sm text-gray-500">
+                      ({reviews.length} {reviews.length === 1 ? "review" : "reviews"})
+                    </span>
+                  </div>
+                </div>
+
+                {/* Rating Distribution */}
+                <div className="mb-6 space-y-1.5">
+                  {[5, 4, 3, 2, 1].map((star) => {
+                    const count = reviews.filter(
+                      (r: any) => r.rating === star
+                    ).length;
+                    const percentage =
+                      reviews.length > 0
+                        ? (count / reviews.length) * 100
+                        : 0;
+                    return (
+                      <div
+                        key={star}
+                        className="flex items-center gap-2 text-sm"
+                      >
+                        <span className="w-3 text-gray-600">{star}</span>
+                        <Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400" />
+                        <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
+                          <div
+                            className="h-full bg-amber-400 rounded-full"
+                            style={{ width: `${percentage}%` }}
+                          />
+                        </div>
+                        <span className="w-8 text-right text-gray-500 text-xs">
+                          {count}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                {/* Individual Reviews */}
+                <div className="space-y-4">
+                  {reviews.slice(0, 5).map((review: any) => {
+                    const reviewer = reviewerMap.get(review.userId) as any;
+                    const reviewerName =
+                      reviewer?.displayName ||
+                      `${reviewer?.firstName || ""} ${reviewer?.lastName || ""}`.trim() ||
+                      "Student";
+                    return (
+                      <div
+                        key={review.id}
+                        className="border-t border-gray-100 pt-4"
+                      >
+                        <div className="flex items-center gap-3 mb-2">
+                          <div className="w-8 h-8 rounded-full overflow-hidden bg-[#E3DFFF] flex items-center justify-center flex-shrink-0">
+                            {reviewer?.profileImage ? (
+                              <Image
+                                src={reviewer.profileImage}
+                                alt={reviewerName}
+                                width={32}
+                                height={32}
+                                className="object-cover w-full h-full"
+                              />
+                            ) : (
+                              <span className="text-xs font-bold text-[#2F288B]">
+                                {reviewerName.charAt(0).toUpperCase()}
+                              </span>
+                            )}
+                          </div>
+                          <div className="flex-1">
+                            <p className="text-sm font-medium text-gray-900">
+                              {reviewerName}
+                            </p>
+                            <div className="flex items-center gap-1">
+                              {[1, 2, 3, 4, 5].map((s) => (
+                                <Star
+                                  key={s}
+                                  className={`w-3 h-3 ${
+                                    s <= review.rating
+                                      ? "text-amber-400 fill-amber-400"
+                                      : "text-gray-300"
+                                  }`}
+                                />
+                              ))}
+                              <span className="text-xs text-gray-400 ml-2">
+                                {new Date(
+                                  review.createdAt
+                                ).toLocaleDateString()}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                        {review.comment && (
+                          <p className="text-sm text-gray-600 ml-11">
+                            {review.comment}
+                          </p>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Right Sidebar - Purchase Card */}

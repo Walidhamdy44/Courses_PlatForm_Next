@@ -3,6 +3,7 @@ import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import VideoPlayer from "../../_components/VideoPlayer";
 import ChapterCompleteSec from "../../_components/ChapterCompleteSec";
+import CourseReview from "../../_components/CourseReview";
 import { AlertTriangle } from "lucide-react";
 
 interface ChapterPageProps {
@@ -56,6 +57,19 @@ const ChapterPage = async ({ params }: ChapterPageProps) => {
     return redirect("/");
   }
 
+  // Fetch existing review if user has purchased
+  let existingReview = null;
+  if (purchase) {
+    try {
+      existingReview = await (db as any).review.findUnique({
+        where: {
+          userId_courseId: { userId, courseId },
+        },
+        select: { rating: true, comment: true },
+      });
+    } catch (e) {}
+  }
+
   return (
     <div className="p-4 md:p-6 lg:p-8 max-w-5xl mx-auto space-y-6">
       {/* Locked Banner */}
@@ -87,6 +101,11 @@ const ChapterPage = async ({ params }: ChapterPageProps) => {
         userId={userId}
         chapterId={chapter.id}
       />
+
+      {/* Review Section - only for purchased users */}
+      {purchase && (
+        <CourseReview courseId={courseId} existingReview={existingReview} />
+      )}
     </div>
   );
 };

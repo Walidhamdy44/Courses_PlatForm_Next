@@ -1,7 +1,7 @@
 import { Course } from "@prisma/client";
 import Image from "next/image";
 import Link from "next/link";
-import { BookOpen, Tag } from "lucide-react";
+import { BookOpen, Star, Tag } from "lucide-react";
 
 interface Creator {
   clerkId: string;
@@ -13,7 +13,11 @@ interface Creator {
 }
 
 interface CourseCardProps {
-  course: Course & { creator?: Creator | null };
+  course: Course & {
+    creator?: Creator | null;
+    averageRating?: number;
+    totalReviews?: number;
+  };
   nChapters: number;
   cat: string;
 }
@@ -24,6 +28,8 @@ const CourseCard = ({ course, nChapters, cat }: CourseCardProps) => {
     creator?.displayName ||
     `${creator?.firstName || ""} ${creator?.lastName || ""}`.trim() ||
     "Instructor";
+  const avgRating = (course as any).averageRating || 0;
+  const totalReviews = (course as any).totalReviews || 0;
 
   return (
     <Link
@@ -82,8 +88,20 @@ const CourseCard = ({ course, nChapters, cat }: CourseCardProps) => {
         {/* Footer */}
         <div className="flex items-center justify-between pt-2 border-t border-gray-50">
           <span className="flex items-center gap-1.5 text-xs text-gray-500">
-            <BookOpen className="w-3.5 h-3.5" />
-            {nChapters} {nChapters === 1 ? "chapter" : "chapters"}
+            {avgRating > 0 ? (
+              <>
+                <Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400" />
+                <span className="font-semibold text-gray-700">
+                  {avgRating.toFixed(1)}
+                </span>
+                <span>({totalReviews})</span>
+              </>
+            ) : (
+              <>
+                <BookOpen className="w-3.5 h-3.5" />
+                {nChapters} {nChapters === 1 ? "chapter" : "chapters"}
+              </>
+            )}
           </span>
 
           {course.price ? (

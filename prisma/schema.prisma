@@ -24,6 +24,7 @@ model Course {
   attachment Attachment[]
   chapter Chapter[]
   purchase Purchase[]
+  reviews Review[]
 
 
   created_at DateTime @default(now())
@@ -172,4 +173,21 @@ model Follow {
   @@unique([followerId, followingId])
   @@index([followerId])
   @@index([followingId])
+}
+
+
+model Review {
+  id        String   @id @default(cuid()) @map("_id")
+  userId    String
+  courseId   String
+  rating    Int      // 1-5 stars
+  comment   String?
+
+  course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, courseId])
+  @@index([courseId])
 }
