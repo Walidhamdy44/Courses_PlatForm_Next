@@ -15,6 +15,7 @@ import {
   Loader2,
 } from "lucide-react";
 import Image from "next/image";
+import FileUpload from "@/components/FileUpload";
 import PersonalInfoSection from "./PersonalInfoSection";
 import LocationSection from "./LocationSection";
 import ProfessionalSection from "./ProfessionalSection";
@@ -29,6 +30,8 @@ interface ProfileFormProps {
 const ProfileForm = ({ profile }: ProfileFormProps) => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
+  const [profileImage, setProfileImage] = useState(profile.profileImage || "");
   const [formData, setFormData] = useState({
     firstName: profile.firstName || "",
     lastName: profile.lastName || "",
@@ -68,7 +71,7 @@ const ProfileForm = ({ profile }: ProfileFormProps) => {
   const handleSave = async () => {
     try {
       setIsLoading(true);
-      await axios.patch("/api/profile", formData);
+      await axios.patch("/api/profile", { ...formData, profileImage });
       toast.success("Profile saved successfully!");
       router.refresh();
     } catch (error) {
@@ -118,12 +121,12 @@ const ProfileForm = ({ profile }: ProfileFormProps) => {
       {/* Profile Header */}
       <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
         <div className="flex flex-col sm:flex-row items-center gap-5">
-          {/* Avatar */}
+          {/* Avatar with Upload */}
           <div className="relative group">
             <div className="w-24 h-24 rounded-full overflow-hidden bg-gray-100 border-4 border-[#E3DFFF]">
-              {profile.profileImage ? (
+              {profileImage ? (
                 <Image
-                  src={profile.profileImage}
+                  src={profileImage}
                   alt="Profile"
                   width={96}
                   height={96}
@@ -135,9 +138,12 @@ const ProfileForm = ({ profile }: ProfileFormProps) => {
                 </div>
               )}
             </div>
-            <div className="absolute inset-0 rounded-full bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center cursor-pointer">
+            <label
+              onClick={() => setIsUploadingImage(true)}
+              className="absolute inset-0 rounded-full bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center cursor-pointer"
+            >
               <Camera className="w-6 h-6 text-white" />
-            </div>
+            </label>
           </div>
 
           {/* Name & Headline */}
@@ -173,6 +179,27 @@ const ProfileForm = ({ profile }: ProfileFormProps) => {
             Save Changes
           </button>
         </div>
+
+        {/* Image Upload Modal */}
+        {isUploadingImage && (
+          <div className="mt-4 p-4 border border-dashed border-[#2F288B]/30 rounded-xl bg-[#f9f9ff]">
+            <p className="text-sm text-gray-600 mb-2 font-medium">Upload a new profile photo</p>
+            <FileUpload
+              endPoint="profileImage"
+              onChange={(url) => {
+                setProfileImage(url);
+                setIsUploadingImage(false);
+                toast.success("Image uploaded! Click Save to apply.");
+              }}
+            />
+            <button
+              onClick={() => setIsUploadingImage(false)}
+              className="mt-2 text-xs text-gray-500 hover:text-gray-700"
+            >
+              Cancel
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Personal Information */}

@@ -1,9 +1,35 @@
-import { UserButton } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
+import { db } from "@/lib/db";
 import Link from "next/link";
-import { ArrowLeft, Menu } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import CoursesMenuMobile from "./CoursesMenuMobile";
+import UserProfileButton from "@/app/(DashBoard)/_components/UserProfileButton";
 
-const CourseNavBar = ({ course }: any) => {
+const CourseNavBar = async ({ course }: any) => {
+  const { userId } = await auth();
+
+  let profile: any = null;
+  if (userId) {
+    try {
+      profile = await (db as any).userProfile.findUnique({
+        where: { clerkId: userId },
+        select: {
+          profileImage: true,
+          displayName: true,
+          firstName: true,
+          lastName: true,
+          email: true,
+          headline: true,
+        },
+      });
+    } catch (e) {}
+  }
+
+  const displayName =
+    profile?.displayName ||
+    `${profile?.firstName || ""} ${profile?.lastName || ""}`.trim() ||
+    "User";
+
   return (
     <div className="flex items-center justify-between h-full px-4 md:px-6">
       {/* Left side */}
@@ -45,7 +71,12 @@ const CourseNavBar = ({ course }: any) => {
         >
           Course Details
         </Link>
-        <UserButton />
+        <UserProfileButton
+          profileImage={profile?.profileImage || null}
+          displayName={displayName}
+          email={profile?.email || ""}
+          headline={profile?.headline || null}
+        />
       </div>
     </div>
   );
