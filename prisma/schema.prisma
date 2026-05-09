@@ -158,6 +158,8 @@ model UserProfile {
   marketingEmails       Boolean  @default(false)
   courseUpdateAlerts     Boolean  @default(true)
 
+  teacherStatus         String?  @default("none") // none | pending | approved | rejected
+
   createdAt             DateTime @default(now())
   updatedAt             DateTime @updatedAt
 }
@@ -190,4 +192,20 @@ model Review {
 
   @@unique([userId, courseId])
   @@index([courseId])
+}
+
+
+model TeacherRequest {
+  id          String   @id @default(cuid()) @map("_id")
+  userId      String
+  expertise   String
+  experience  String
+  motivation  String
+  adminCode   String   // 6-digit verification code
+  status      String   @default("pending") // pending | approved | rejected
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([userId])
 }

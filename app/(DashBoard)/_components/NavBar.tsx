@@ -1,9 +1,11 @@
 import { auth } from "@clerk/nextjs/server";
 import { db } from "@/lib/db";
+import Link from "next/link";
 import MenuMobile from "./MenuMobile";
 import NavMood from "./Nav-Mood";
 import SearchNavBar from "./SearchNavBar";
 import UserProfileButton from "./UserProfileButton";
+import TeacherRequestModal from "./TeacherRequestModal";
 import { Bell } from "lucide-react";
 
 const NavBar = async () => {
@@ -21,6 +23,7 @@ const NavBar = async () => {
           lastName: true,
           email: true,
           headline: true,
+          teacherStatus: true,
         },
       });
     } catch (e) {}
@@ -30,6 +33,8 @@ const NavBar = async () => {
     profile?.displayName ||
     `${profile?.firstName || ""} ${profile?.lastName || ""}`.trim() ||
     "User";
+
+  const teacherStatus = profile?.teacherStatus || "none";
 
   return (
     <div className="flex items-center justify-between px-6 w-full border-b border-gray-100 bg-white/80 backdrop-blur-sm z-20">
@@ -45,7 +50,14 @@ const NavBar = async () => {
 
       {/* Right: Actions */}
       <div className="flex items-center gap-3">
-        <NavMood />
+        {/* Teacher Mode / Request */}
+        {teacherStatus === "approved" ? (
+          <NavMood />
+        ) : (
+          <>
+            <TeacherRequestModal teacherStatus={teacherStatus} />
+          </>
+        )}
         <button className="relative p-2 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition">
           <Bell className="w-5 h-5" />
           <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-indigo-500 rounded-full" />

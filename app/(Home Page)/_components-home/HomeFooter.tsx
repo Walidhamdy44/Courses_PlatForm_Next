@@ -80,10 +80,10 @@ export default function HomeFooter() {
         <div className="flex flex-col gap-4">
           <h5 className="font-bold text-gray-900">Customer Support</h5>
           <a
-            href="mailto:support@edustride.com"
+            href="mailto:support@learn.com"
             className="text-gray-500 hover:text-indigo-900 transition-colors text-sm"
           >
-            support@edustride.com
+            support@learn.com
           </a>
           <p className="text-gray-500 text-sm">Phone: +0000000000</p>
           <p className="text-gray-500 text-sm">2248-C, Middleton, Hall-23</p>

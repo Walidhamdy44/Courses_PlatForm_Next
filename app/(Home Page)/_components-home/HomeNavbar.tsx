@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useUser } from "@clerk/nextjs";
 
-export default function HomeNavbar() {
+export default function HomeNavbar() { 
   const [scrolled, setScrolled] = useState(false);
   const { isSignedIn, isLoaded } = useUser();
 

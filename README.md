@@ -1,8 +1,8 @@
 <p align="center">
-  <img src="public/imgs/logo1.svg" alt="EduStride Logo" width="60" />
+  <img src="public/imgs/logo1.svg" alt="Learn Logo" width="60" />
 </p>
 
-<h1 align="center">EduStride — Learning Management Platform</h1>
+<h1 align="center">Learn — Learning Management Platform</h1>
 
 <p align="center">
   A modern, full-stack LMS built with Next.js 15, React, Stripe, Prisma, and MongoDB.<br/>
